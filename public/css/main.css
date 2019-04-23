@@ -220,9 +220,19 @@ input[type=range]:focus::-ms-fill-upper {
 {
      background-color: #f1f1f1;
 }
-label
-{
+label {
      font: 300 16px/1.7 'Open Sans', sans-serif;
      color: f7f7f7;
      cursor: pointer;
 }
+
+.sliders-div {
+  border: 1px solid #c0c0c0;
+  margin: 1em 2px;
+}
+
+.pace-wrapper {
+  color: yellow;
+}
+
+footer
