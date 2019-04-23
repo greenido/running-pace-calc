@@ -103,8 +103,8 @@ function calcPace() {
   function finalPaceKm(){
    let seconds = ((wholeMinuteMile * 60) + justSecondsMile) * 0.62137119223733;
    console.log("▶️▶️ Seconds totals: "+seconds);
-   let minutes = Math.round(seconds/60);
-   let secondsLeft = Math.round(seconds % 60);
+   let minutes = Math.trunc(seconds/60);
+   let secondsLeft = Math.trunc(seconds % 60);
    let pace = finalPace(secondsLeft, minutes);
    return pace; 
   }
