@@ -235,4 +235,9 @@ label {
   color: yellow;
 }
 
-footer
+footer {
+  color: white;
+}
+footer > a {
+  color: #55ff84;
+}
