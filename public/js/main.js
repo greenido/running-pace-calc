@@ -69,10 +69,10 @@ function calcPace() {
   //
   let totalMinutes = getHours() + getMinutes() + getSeconds();
   let justSecondsMile = Math.round(((totalMinutes % getRaceDistance())/getRaceDistance())*60);
-  let wholeMinute = Math.round((totalMinutes / getRaceDistance()) - ((totalMinutes % getRaceDistance())/getRaceDistance()));
+  let wholeMinuteMile = Math.round((totalMinutes / getRaceDistance()) - ((totalMinutes % getRaceDistance())/getRaceDistance()));
 
-  console.log("total min: " + totalMinutes + " justSecMile: " + 
-              justSecondsMile + " wholeMin: " +  wholeMinute); 
+  console.log("* totalMinutes: " + totalMinutes + " | justSecMile: " + 
+              justSecondsMile + " | wholeMinuteMile: " +  wholeMinuteMile); 
   //
   //
   //
@@ -87,7 +87,7 @@ function calcPace() {
   //
   //
   //
-  function finalPace(justSeconds){
+  function finalPace(justSeconds, wholeMinute){
     if (justSecondsFormatted(justSeconds) == 60) {
       let setPace = wholeMinute + 1 + ':00';
       return setPace;
@@ -101,14 +101,16 @@ function calcPace() {
   // convert min/mile to min/km --> 0.62137119223733
   //
   function finalPaceKm(){
-   let seconds = justSecondsMile * 0.62137119223733;
-   console.log("seconds: "+seconds);
-   let pace = finalPace(seconds);
+   let seconds = ((wholeMinuteMile * 60) + justSecondsMile) * 0.62137119223733;
+   console.log("▶️▶️ Seconds totals: "+seconds);
+   let minutes = Math.round(seconds/60);
+   let secondsLeft = Math.round(seconds % 60);
+   let pace = finalPace(secondsLeft, minutes);
    return pace; 
   }
 
 
-  document.getElementById('PaceValue').innerHTML = finalPace(justSecondsMile) + '<span> Min/Mi</span>';
+  document.getElementById('PaceValue').innerHTML = finalPace(justSecondsMile, wholeMinuteMile) + '<span> Min/Mi</span>';
   document.getElementById('PaceValue-km').innerHTML = finalPaceKm() + '<span> Min/Km</span>';
 
 
