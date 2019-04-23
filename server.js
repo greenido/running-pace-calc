@@ -1,5 +1,7 @@
+// Simple entry point to our site
+//
 // server.js
-// where your node app starts
+//
 
 // init project
 var express = require('express');
@@ -20,5 +22,5 @@ app.use(function(req, res) {
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+  console.log('🏈 app is listening on port ' + listener.address().port);
 });
