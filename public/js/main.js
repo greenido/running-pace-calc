@@ -98,9 +98,9 @@ function finalPace(){
 // convert min/mile to min/km --> 0.62137119223733
 //
 function finalPaceKm(){
- let pace = justSeconds;
-  console.log("pace: "+pace);
- pace = pace * 0.62137119223733
+ let pace = justSeconds * 0.62137119223733;
+ console.log("pace: "+pace);
+ pace = pace
  return pace; 
 }
   
