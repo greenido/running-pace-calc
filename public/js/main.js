@@ -16,6 +16,7 @@ function loadEventListeners(){
 //
 //
 function calcPace() {
+  
   function getRaceDistance() {
     let radios = document.getElementsByName('distance');
     let val;
@@ -28,82 +29,87 @@ function calcPace() {
     return val; // return value of checked radio or undefined if none checked
     }
   
-//
-//
-//
-function getHours() {
-	let myValue = document.getElementById('hourSlide').value;
-  document.getElementById('hourSliderValue').innerHTML = myValue;
-  return parseFloat(myValue*60);
-}
-
-//
-//
-//
-function getMinutes() {
-	let myValue = document.getElementById('minuteSlide').value;
-  if(myValue >= 10){
-      document.getElementById('minuteSliderValue').innerHTML = myValue;
-    } else if(myValue <= 9) {
-      document.getElementById('minuteSliderValue').innerHTML = '0' + myValue;
-    }
-  return parseFloat(myValue);
-}
-
-//
-//
-//  
-function getSeconds() {
-	let myValue = document.getElementById('secondSlide').value;
-  if(myValue >= 10){
-      document.getElementById('secondSliderValue').innerHTML = myValue;
-    } else if(myValue <= 9) {
-      document.getElementById('secondSliderValue').innerHTML = '0' + myValue;
-    }
-  return parseFloat(myValue / 60);
-}
-
-//
-//
-//
-let totalMinutes = getHours() + getMinutes() + getSeconds();
-let justSeconds = Math.round(((totalMinutes % getRaceDistance())/getRaceDistance())*60);
-let wholeMinute = Math.round((totalMinutes / getRaceDistance()) - ((totalMinutes % getRaceDistance())/getRaceDistance()));
-  
-//
-//
-//
-function justSecondsFormatted() {
-  if (justSeconds > 9 ){
-    return justSeconds;
-  }else if (justSeconds < 10 ) {
-    return '0' + justSeconds;
+  //
+  //
+  //
+  function getHours() {
+    let myValue = document.getElementById('hourSlide').value;
+    document.getElementById('hourSliderValue').innerHTML = myValue;
+    return parseFloat(myValue*60);
   }
-};
-  
-//
-//
-//
-function finalPace(){
-  if (justSecondsFormatted() == 60) {
-    let setPace = wholeMinute + 1 + ':00';
-    return setPace;
-  }else {
-    let setPace = wholeMinute + ':' + justSecondsFormatted();
-    return setPace;
+
+  //
+  //
+  //
+  function getMinutes() {
+    let myValue = document.getElementById('minuteSlide').value;
+    if(myValue >= 10){
+        document.getElementById('minuteSliderValue').innerHTML = myValue;
+      } else if(myValue <= 9) {
+        document.getElementById('minuteSliderValue').innerHTML = '0' + myValue;
+      }
+    return parseFloat(myValue);
   }
-}
- 
-//
-// convert min/mile to min/km --> 0.62137119223733
-//
-function finalPaceKm(){
- let pace = justSeconds * 0.62137119223733;
- console.log("pace: "+pace);
- pace = pace
- return pace; 
-}
-  
-document.getElementById('PaceValue').innerHTML = finalPace() + '<span> Min/Mi</span>';
-document.getElementById('PaceValue-km').innerHTML = finalPaceKm() + '<span> Min/Km</span>';
+
+  //
+  //
+  //  
+  function getSeconds() {
+    let myValue = document.getElementById('secondSlide').value;
+    if(myValue >= 10){
+        document.getElementById('secondSliderValue').innerHTML = myValue;
+      } else if(myValue <= 9) {
+        document.getElementById('secondSliderValue').innerHTML = '0' + myValue;
+      }
+    return parseFloat(myValue / 60);
+  }
+
+  //
+  //
+  //
+  let totalMinutes = getHours() + getMinutes() + getSeconds();
+  let justSecondsMile = Math.round(((totalMinutes % getRaceDistance())/getRaceDistance())*60);
+  let wholeMinute = Math.round((totalMinutes / getRaceDistance()) - ((totalMinutes % getRaceDistance())/getRaceDistance()));
+
+  console.log("total min: " + totalMinutes + " justSecMile: " + 
+              justSecondsMile + " wholeMin: " +  wholeMinute); 
+  //
+  //
+  //
+  function justSecondsFormatted(justSeconds) {
+    if (justSeconds > 9 ){
+      return justSeconds;
+    }else if (justSeconds < 10 ) {
+      return '0' + justSeconds;
+    }
+  };
+
+  //
+  //
+  //
+  function finalPace(justSeconds){
+    if (justSecondsFormatted(justSeconds) == 60) {
+      let setPace = wholeMinute + 1 + ':00';
+      return setPace;
+    }else {
+      let setPace = wholeMinute + ':' + justSecondsFormatted(justSeconds);
+      return setPace;
+    }
+  }
+
+  //
+  // convert min/mile to min/km --> 0.62137119223733
+  //
+  function finalPaceKm(){
+   let seconds = justSecondsMile * 0.62137119223733;
+   console.log("seconds: "+seconds);
+   let pace = finalPace(seconds);
+   return pace; 
+  }
+
+
+  document.getElementById('PaceValue').innerHTML = finalPace(justSecondsMile) + '<span> Min/Mi</span>';
+  document.getElementById('PaceValue-km').innerHTML = finalPaceKm() + '<span> Min/Km</span>';
+
+
 }
