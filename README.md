@@ -9,4 +9,4 @@ Learn what will be the pace you need to keep in order to make a new PR in a mara
 
 ## Where?
 
-<a href="https://running-pace-calculator.glitch.me/">Here</a>
+🏃🏽‍♂️ <a href="https://running-pace-calculator.glitch.me/">running-pace-calculator.glitch.me</a> 🏃🏼‍♀️
