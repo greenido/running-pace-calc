@@ -71,8 +71,9 @@ function calcPace() {
   let justSecondsMile = Math.round(((totalMinutes % getRaceDistance())/getRaceDistance())*60);
   let wholeMinuteMile = Math.round((totalMinutes / getRaceDistance()) - ((totalMinutes % getRaceDistance())/getRaceDistance()));
 
-  console.log("* totalMinutes: " + totalMinutes + " | justSecMile: " + 
-              justSecondsMile + " | wholeMinuteMile: " +  wholeMinuteMile); 
+  //console.log("* totalMinutes: " + totalMinutes + " | justSecMile: " + 
+  //            justSecondsMile + " | wholeMinuteMile: " +  wholeMinuteMile); 
+  
   //
   //
   //
@@ -102,7 +103,7 @@ function calcPace() {
   //
   function finalPaceKm(){
    let seconds = ((wholeMinuteMile * 60) + justSecondsMile) * 0.62137119223733;
-   console.log("▶️▶️ Seconds totals: "+seconds);
+   //console.log("▶️▶️ Seconds totals: "+seconds);
    let minutes = Math.trunc(seconds/60);
    let secondsLeft = Math.trunc(seconds % 60);
    let pace = finalPace(secondsLeft, minutes);
