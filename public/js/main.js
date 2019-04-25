@@ -1,3 +1,9 @@
+//
+// Listen to the sliders and calculate the pace base on the time and distance. Simple.
+//
+// @Author: Ido
+// @date: April 2019
+//
 calcPace();
 
 loadEventListeners();

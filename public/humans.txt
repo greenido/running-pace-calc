@@ -3,11 +3,11 @@
 
 # TEAM
 
-    <name> -- <role> -- <twitter>
+    Ido Green -- CEO -- @greenido
 
 # THANKS
 
-    <name>
+    @Glitch, @Google and all my running friends.
 
 # TECHNOLOGY COLOPHON
 

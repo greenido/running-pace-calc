@@ -1,6 +1,8 @@
 // Simple entry point to our site
 //
-// server.js
+//
+// @Author: Ido
+// @date: April 2019
 //
 
 // init project
