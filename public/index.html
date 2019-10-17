@@ -1,99 +1,217 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Running Pace Calculator</title>
-        
-        <meta name="description" content="Running pace calculator for your next marathon">
-        <meta name="author" content="Ido Green | greenido.wordpress.com | @greenido">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Running Pace Calculator</title>
 
-        <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-        <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+    <meta
+      name="description"
+      content="Running pace calculator for your next marathon"
+    />
+    <meta
+      name="author"
+      content="Ido Green | greenido.wordpress.com | @greenido"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
-        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
-    </head>
-    <body>
-        <!--[if lt IE 8]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <div class="container">
-          <div class="wrapper">
-          <h2>🏃🏼‍♀️ Running Pace Calculator</h2>
-            <form id="paceForm">
-              <div class="row radio-wrapper">
-                  <fieldset id ="distanceRadioFields">
-                    <legend>Select A Distance:</legend>
-                      <label><input class="form-radio" type="radio" name="distance" value="13.1" id="halfmarathon">13.1</label>
-                      <label><input class="form-radio" type="radio" name="distance" value="26.2" id="marathon" checked="checked" >26.2</label>
-                      <label><input class="form-radio" type="radio" name="distance" value="31.1" id="fiftyk">50K</label>
-                      <label><input class="form-radio" type="radio" name="distance" value="50" id="fiftymiler">50M</label>
-                      <label><input class="form-radio" type="radio" name="distance" value="62.2" id="hundredkm">100K</label>
-                      <label><input class="form-radio" type="radio" name="distance" value="100" id="hundredmiler">100M</label>
-                  </fieldset>
-              </div>
-              <div class="sliders-div row">
-                <div class="slider-wrapper">
-                  <label>Hours: <input type="range" min="0" max="24" value="3" class="slider" id="hourSlide" step="1"></label>
-                  <label>Minutes: <input type="range" min="0" max="59" value="30" class="slider" id="minuteSlide" step="1"></label>
-                  <label>Seconds: <input type="range" min="0" max="59" value="0" class="slider" id="secondSlide" step="1" ></label>
-                </div>
-              </div>
-            </form>
-          <div class="row time-wrapper">
-            <h1>Total Time</h1>
-            <div class="output">  
-              <span id="hourSliderValue">0</span><span>:</span><span id="minuteSliderValue">00</span><span>:</span><span id="secondSliderValue">00</span>
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+  </head>
+  <body>
+    <!--[if lt IE 8]>
+      <p class="browserupgrade">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="http://browsehappy.com/">upgrade your browser</a> to improve
+        your experience.
+      </p>
+    <![endif]-->
+    <div class="container">
+      <div class="wrapper">
+        <h2>🏃🏼‍♀️ Running Pace Calculator</h2>
+        <form id="paceForm">
+          <div class="row radio-wrapper">
+            <fieldset id="distanceRadioFields">
+              <legend>Select A Distance:</legend>
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value="13.1"
+                  id="halfmarathon"
+                />13.1</label
+              >
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value="26.2"
+                  id="marathon"
+                  checked="checked"
+                />26.2</label
+              >
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value="31.1"
+                  id="fiftyk"
+                />50K</label
+              >
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value="50"
+                  id="fiftymiler"
+                />50M</label
+              >
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value="62.2"
+                  id="hundredkm"
+                />100K</label
+              >
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value="100"
+                  id="hundredmiler"
+                />100M</label
+              >
+            </fieldset>
+          </div>
+          <div class="sliders-div row">
+            <div class="slider-wrapper">
+              <label
+                >Hours:
+                <input
+                  type="range"
+                  min="0"
+                  max="24"
+                  value="3"
+                  class="slider"
+                  id="hourSlide"
+                  step="1"
+              /></label>
+              <label
+                >Minutes:
+                <input
+                  type="range"
+                  min="0"
+                  max="59"
+                  value="30"
+                  class="slider"
+                  id="minuteSlide"
+                  step="1"
+              /></label>
+              <label
+                >Seconds:
+                <input
+                  type="range"
+                  min="0"
+                  max="59"
+                  value="0"
+                  class="slider"
+                  id="secondSlide"
+                  step="1"
+              /></label>
             </div>
           </div>
-          <div class="row pace-wrapper">
-            <h1>Your Pace</h1>
-            <h3 class="output" id="PaceValue"></h3>
-            <h3 class="output" id="PaceValue-km"></h3>
+        </form>
+        <div class="row time-wrapper">
+          <h1>Total Time</h1>
+          <div class="output">
+            <span id="hourSliderValue">0</span><span>:</span
+            ><span id="minuteSliderValue">00</span><span>:</span
+            ><span id="secondSliderValue">00</span>
           </div>
         </div>
+        <div class="row pace-wrapper">
+          <h1>Your Pace</h1>
+          <h3 class="output" id="PaceValue"></h3>
+          <h3 class="output" id="PaceValue-km"></h3>
+        </div>
       </div>
-      
-      <hr>
-      <footer>
-        <br>
-        <h2>
-          ℹ️ Psst... 
-        </h2>
-        In case you wish a great calculator that can estimate how fast you’d run your next marathon based on your training regimen 
-        and your performance in just one recent race <br><br>Check this 
-        <a href="https://projects.fivethirtyeight.com/marathon-calculator/" target="_blank">Five Thirty Eight Marathon Calculator</a><br>
-        <br>
-        <br>
-            🏃🏽‍♂️<a href="https://ido-green.appspot.com">Ido's Talks</a> 🏃🏼‍♀️
-          <small>Updated: Aug 2019</small>
-      </footer>
-      
-      <!--  JS  -->
-      <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-      <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
-      <script src="js/plugins.js"></script>
-      <script src="js/main.js"></script>
+    </div>
 
-      <!-- GA -->
-      <script>
-        (function(i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function() {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-        ga('create', 'UA-27750723-1', 'auto');
-        ga('require', 'displayfeatures');
-        ga('send', 'pageview');
+    <hr />
+    <footer>
+      <br />
+      
+      <h2>
+        ℹ️ Psst...
+      </h2>
+      In case you wish a great calculator that can estimate how fast you’d run
+      your next marathon based on your training regimen and your performance in
+      just one recent race <br /><br />Check this
+      <a
+        href="https://projects.fivethirtyeight.com/marathon-calculator/"
+        target="_blank"
+        >Five Thirty Eight Marathon Calculator</a
+      >
+      <br />
+      <br />
+      <div id="otherlinks">
+        <a href="marathon-food.html" target="_blank">Marathon Nutrition</a>
+        <a href="marathon-food.html" target="_blank">Marathon Nutrition</a>
+        https://www.trainingpeaks.com/guides/marathon-training/
+      </div>
+        
+      <br><br>
+      <br />
+      🏃🏽‍♂️<a href="https://ido-green.appspot.com">Ido's Talks</a> 🏃🏼‍♀️
+      <small>Updated: Aug 2019</small>
+    </footer>
+
+    <!--  JS  -->
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script>
+      window.jQuery ||
+        document.write(
+          '<script src="js/vendor/jquery-1.12.0.min.js"><\/script>'
+        );
     </script>
-    </body>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- GA -->
+    <script>
+      (function(i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function() {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(
+        window,
+        document,
+        "script",
+        "//www.google-analytics.com/analytics.js",
+        "ga"
+      );
+      ga("create", "UA-27750723-1", "auto");
+      ga("require", "displayfeatures");
+      ga("send", "pageview");
+    </script>
+  </body>
 </html>
