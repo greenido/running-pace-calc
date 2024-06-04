@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Running Pace Calculator",
+  "version": "1.0",
+  "description": "A Chrome extension that opens the Running Pace Calculator website.",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "images/run16.png",
+    "48": "images/run48.png",
+    "128": "images/run128.png"
+  }
+  
+}
