@@ -92,26 +92,37 @@ h2 {
   margin: 10px 0 0 0;
 }
 .results-row {
-  align-items: stretch;
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  justify-content: space-between;
 }
 
-.results-row .time-wrapper,
-.results-row .pace-wrapper {
-  text-align: center;
+.result-item {
+  align-items: center;
+  display: flex;
+  flex: 1 1 0;
+  gap: 6px;
+  min-width: 0;
 }
 
 .results-row h1 {
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  flex: 0 0 auto;
+  font-size: clamp(0.9rem, 2.8vw, 1.2rem);
+  margin: 0;
+  white-space: nowrap;
 }
 
 .results-row .output {
   box-sizing: border-box;
-  font-size: clamp(1.1rem, 3.6vw, 2rem);
-  padding: 10px 14px;
-  width: 100%;
+  display: block;
+  flex: 1 1 auto;
+  font-size: clamp(0.9rem, 2.8vw, 1.25rem);
+  min-width: 0;
+  padding: 6px 8px;
+  text-align: center;
+  white-space: nowrap;
 }
 .slider-wrapper{
 
