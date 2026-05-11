@@ -18,7 +18,7 @@ app.use("/assets", assets);
 
 // handle 404s
 app.use(function(req, res) {
-  res.status(400);
+  res.status(404);
   res.sendFile(__dirname + '/public/404.html');
 });
 

@@ -74,8 +74,9 @@ function calcPace() {
   //
   //
   let totalMinutes = getHours() + getMinutes() + getSeconds();
-  let justSecondsMile = Math.round(((totalMinutes % getRaceDistance())/getRaceDistance())*60);
-  let wholeMinuteMile = Math.round((totalMinutes / getRaceDistance()) - ((totalMinutes % getRaceDistance())/getRaceDistance()));
+  let paceMinutes = totalMinutes / getRaceDistance();
+  let wholeMinuteMile = Math.floor(paceMinutes);
+  let justSecondsMile = Math.round((paceMinutes - wholeMinuteMile) * 60);
 
   //console.log("* totalMinutes: " + totalMinutes + " | justSecMile: " + 
   //            justSecondsMile + " | wholeMinuteMile: " +  wholeMinuteMile); 
@@ -105,13 +106,13 @@ function calcPace() {
   }
 
   //
-  // convert min/mile to min/km --> 0.62137119223733
+  // convert min/mile to min/km --> multiply pace in seconds by 0.621371 (1 km / 1.60934 miles)
   //
   function finalPaceKm(){
-   let seconds = ((wholeMinuteMile * 60) + justSecondsMile) * 0.62137119223733;
-   //console.log("▶️▶️ Seconds totals: "+seconds);
-   let minutes = Math.trunc(seconds/60);
-   let secondsLeft = Math.trunc(seconds % 60);
+   let totalPaceSeconds = (wholeMinuteMile * 60) + justSecondsMile;
+   let kmPaceSeconds = totalPaceSeconds * 0.62137119223733;
+   let minutes = Math.floor(kmPaceSeconds / 60);
+   let secondsLeft = Math.round(kmPaceSeconds % 60);
    let pace = finalPace(secondsLeft, minutes);
    return pace; 
   }

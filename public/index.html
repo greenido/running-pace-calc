@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html class="no-js" lang="">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>Running Pace Calculator</title>
 
     <meta
@@ -20,16 +19,8 @@
 
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/main.css" />
-    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
   </head>
   <body>
-    <!--[if lt IE 8]>
-      <p class="browserupgrade">
-        You are using an <strong>outdated</strong> browser. Please
-        <a href="http://browsehappy.com/">upgrade your browser</a> to improve
-        your experience.
-      </p>
-    <![endif]-->
     <div class="container">
       <div class="wrapper">
         <h2>🏃🏼‍♀️ Running Pace Calculator</h2>
@@ -115,6 +106,7 @@
                   class="slider"
                   id="hourSlide"
                   step="1"
+                  aria-label="Hours"
               /></label>
               <label
                 >Minutes:
@@ -126,6 +118,7 @@
                   class="slider"
                   id="minuteSlide"
                   step="1"
+                  aria-label="Minutes"
               /></label>
               <label
                 >Seconds:
@@ -137,6 +130,7 @@
                   class="slider"
                   id="secondSlide"
                   step="1"
+                  aria-label="Seconds"
               /></label>
             </div>
           </div>
@@ -151,8 +145,8 @@
         </div>
         <div class="row pace-wrapper">
           <h1>Your Pace</h1>
-          <h3 class="output" id="PaceValue"></h3>
-          <h3 class="output" id="PaceValue-km"></h3>
+          <h3 class="output" id="PaceValue" aria-live="polite"></h3>
+          <h3 class="output" id="PaceValue-km" aria-live="polite"></h3>
         </div>
       </div>
     </div>
@@ -187,7 +181,7 @@
         <h3>
           🏃 🏃 The five S's of sports training are: Stamina, Speed, Strength,
           Skill and Spirit; but the greatest of these is Spirit.
-        </h4>
+        </h3>
       </div>
 
       <br /><br />
@@ -197,40 +191,15 @@
     </footer>
 
     <!--  JS  -->
-    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script>
-      window.jQuery ||
-        document.write(
-          '<script src="js/vendor/jquery-1.12.0.min.js"><\/script>'
-        );
-    </script>
-    <script src="js/plugins.js"></script>
     <script src="js/main.js"></script>
 
-    <!-- GA -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
-      (function(i, s, o, g, r, a, m) {
-        i["GoogleAnalyticsObject"] = r;
-        (i[r] =
-          i[r] ||
-          function() {
-            (i[r].q = i[r].q || []).push(arguments);
-          }),
-          (i[r].l = 1 * new Date());
-        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-        a.async = 1;
-        a.src = g;
-        m.parentNode.insertBefore(a, m);
-      })(
-        window,
-        document,
-        "script",
-        "//www.google-analytics.com/analytics.js",
-        "ga"
-      );
-      ga("create", "UA-27750723-1", "auto");
-      ga("require", "displayfeatures");
-      ga("send", "pageview");
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
     </script>
   </body>
 </html>

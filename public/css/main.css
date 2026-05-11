@@ -247,3 +247,13 @@ footer > a {
   border-radius: 22px;
   
 }
+
+/* Marathon nutrition page styles */
+.container h2,
+.container h3 {
+  padding: 0.8em;
+}
+
+.container a {
+  background: red;
+}

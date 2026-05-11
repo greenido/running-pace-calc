@@ -1,7 +1,7 @@
 {
   "name": "running-pace-calculator",
   "version": "0.0.5",
-  "description": "running pace calculator that workds everywhere",
+  "description": "running pace calculator that works everywhere",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -10,7 +10,7 @@
     "express": "^4.17.3"
   },
   "engines": {
-    "node": "12.9.1"
+    "node": ">=18.0.0"
   },
   "repository": {
     "url": "https://github.com/greenido/running-pace-calculator"
