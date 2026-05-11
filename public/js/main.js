@@ -4,6 +4,7 @@
 // @Author: Ido
 // @date: April 2019
 //
+syncDistanceOptions();
 calcPace();
 
 loadEventListeners();
@@ -15,14 +16,41 @@ function loadEventListeners(){
   document.getElementById('hourSlide').addEventListener('input', calcPace);
   document.getElementById('minuteSlide').addEventListener('input', calcPace);
   document.getElementById('secondSlide').addEventListener('input', calcPace);
-  document.getElementById('distanceRadioFields').addEventListener('click', calcPace);
-  document.getElementById('unitRadioFields').addEventListener('click', calcPace);
+  document.getElementById('distanceRadioFields').addEventListener('change', calcPace);
+  document.getElementById('unitRadioFields').addEventListener('change', calcPace);
+}
+
+//
+//
+//
+function getUnit() {
+  let radios = document.getElementsByName('unit');
+  for (var i = 0; i < radios.length; i++) {
+    if (radios[i].checked) {
+      return radios[i].value;
+    }
+  }
+  return 'mi';
+}
+
+//
+//
+//
+function syncDistanceOptions() {
+  let unit = getUnit();
+  let radios = document.getElementsByName('distance');
+
+  for (var i = 0; i < radios.length; i++) {
+    radios[i].value = radios[i].dataset[unit];
+    radios[i].nextElementSibling.textContent = radios[i].dataset[unit + 'Label'];
+  }
 }
 
 //
 //
 //
 function calcPace() {
+  syncDistanceOptions();
   
   function getRaceDistance() {
     let radios = document.getElementsByName('distance');
@@ -30,7 +58,7 @@ function calcPace() {
     for (var i = 0; i < radios.length; i++) {
       if (radios[i].type === 'radio' && radios[i].checked) {
           // get value, set checked flag or do whatever you need to
-          val = radios[i].value;
+          val = parseFloat(radios[i].value);
         }
       }
     return val; // return value of checked radio or undefined if none checked
@@ -76,8 +104,8 @@ function calcPace() {
   //
   let totalMinutes = getHours() + getMinutes() + getSeconds();
   let paceMinutes = totalMinutes / getRaceDistance();
-  let wholeMinuteMile = Math.floor(paceMinutes);
-  let justSecondsMile = Math.round((paceMinutes - wholeMinuteMile) * 60);
+  let wholePaceMinutes = Math.floor(paceMinutes);
+  let paceSeconds = Math.round((paceMinutes - wholePaceMinutes) * 60);
 
   //console.log("* totalMinutes: " + totalMinutes + " | justSecMile: " + 
   //            justSecondsMile + " | wholeMinuteMile: " +  wholeMinuteMile); 
@@ -106,32 +134,8 @@ function calcPace() {
     }
   }
 
-  //
-  // convert min/mile to min/km --> multiply pace in seconds by 0.621371 (1 km / 1.60934 miles)
-  //
-  function finalPaceKm(){
-   let totalPaceSeconds = (wholeMinuteMile * 60) + justSecondsMile;
-   let kmPaceSeconds = totalPaceSeconds * 0.62137119223733;
-   let minutes = Math.floor(kmPaceSeconds / 60);
-   let secondsLeft = Math.round(kmPaceSeconds % 60);
-   let pace = finalPace(secondsLeft, minutes);
-   return pace; 
-  }
-  function getUnit() {
-    let radios = document.getElementsByName('unit');
-    for (var i = 0; i < radios.length; i++) {
-      if (radios[i].checked) {
-        return radios[i].value;
-      }
-    }
-    return 'mi';
-  }
-
-  if (getUnit() === 'km') {
-    document.getElementById('PaceValue').innerHTML = finalPaceKm() + '<span> Min/Km</span>';
-  } else {
-    document.getElementById('PaceValue').innerHTML = finalPace(justSecondsMile, wholeMinuteMile) + '<span> Min/Mi</span>';
-  }  document.getElementById('PaceValue-km').innerHTML = finalPaceKm() + '<span> Min/Km</span>';
+  let paceUnit = getUnit() === 'km' ? 'Km' : 'Mi';
+  document.getElementById('PaceValue').innerHTML = finalPace(paceSeconds, wholePaceMinutes) + '<span> Min/' + paceUnit + '</span>';
 
 
 }
