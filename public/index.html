@@ -26,6 +26,11 @@
         <h2>🏃🏼‍♀️ Running Pace Calculator</h2>
         <form id="paceForm">
           <div class="row radio-wrapper">
+            <fieldset id="unitRadioFields" style="margin-bottom: 10px;">
+              <legend>Select Pace Unit:</legend>
+              <label><input class="form-radio" type="radio" name="unit" value="mi" id="unit-mi" checked="checked"/> Miles</label>
+              <label><input class="form-radio" type="radio" name="unit" value="km" id="unit-km" /> Kilometers</label>
+            </fieldset>
             <fieldset id="distanceRadioFields">
               <legend>Select A Distance:</legend>
                <label
@@ -135,7 +140,7 @@
             </div>
           </div>
         </form>
-        <div class="row time-wrapper">
+        <div class="row time-wrapper" style="text-align: center;">
           <h1>Total Time</h1>
           <div class="output">
             <span id="hourSliderValue">0</span><span>:</span
@@ -143,31 +148,15 @@
             ><span id="secondSliderValue">00</span>
           </div>
         </div>
-        <div class="row pace-wrapper">
+        <div class="row pace-wrapper" style="text-align: center;">
           <h1>Your Pace</h1>
           <h3 class="output" id="PaceValue" aria-live="polite"></h3>
-          <h3 class="output" id="PaceValue-km" aria-live="polite"></h3>
         </div>
       </div>
     </div>
 
     <hr />
     <footer>
-      <br />
-
-      <h2>
-        ℹ️ Psst...
-      </h2>
-      In case you wish a great calculator that can estimate how fast you’d run
-      your next marathon based on your training regimen and your performance in
-      just one recent race <br /><br />Check this
-      <a
-        href="https://projects.fivethirtyeight.com/marathon-calculator/"
-        target="_blank"
-        >Five Thirty Eight Marathon Calculator</a
-      >
-      <br />
-      <br />
       <div id="otherlinks">
         <a href="marathon-food.html" target="_blank">Marathon Nutrition</a> &
         <a

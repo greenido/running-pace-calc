@@ -16,6 +16,7 @@ function loadEventListeners(){
   document.getElementById('minuteSlide').addEventListener('input', calcPace);
   document.getElementById('secondSlide').addEventListener('input', calcPace);
   document.getElementById('distanceRadioFields').addEventListener('click', calcPace);
+  document.getElementById('unitRadioFields').addEventListener('click', calcPace);
 }
 
 //
@@ -116,10 +117,21 @@ function calcPace() {
    let pace = finalPace(secondsLeft, minutes);
    return pace; 
   }
+  function getUnit() {
+    let radios = document.getElementsByName('unit');
+    for (var i = 0; i < radios.length; i++) {
+      if (radios[i].checked) {
+        return radios[i].value;
+      }
+    }
+    return 'mi';
+  }
 
-
-  document.getElementById('PaceValue').innerHTML = finalPace(justSecondsMile, wholeMinuteMile) + '<span> Min/Mi</span>';
-  document.getElementById('PaceValue-km').innerHTML = finalPaceKm() + '<span> Min/Km</span>';
+  if (getUnit() === 'km') {
+    document.getElementById('PaceValue').innerHTML = finalPaceKm() + '<span> Min/Km</span>';
+  } else {
+    document.getElementById('PaceValue').innerHTML = finalPace(justSecondsMile, wholeMinuteMile) + '<span> Min/Mi</span>';
+  }  document.getElementById('PaceValue-km').innerHTML = finalPaceKm() + '<span> Min/Km</span>';
 
 
 }

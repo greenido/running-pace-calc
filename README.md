@@ -10,7 +10,8 @@ This tool calculates the required pace to achieve a specific time for popular ra
 <img src="https://cdn.glitch.com/17a325bd-b2e8-4805-bc29-d62b9d07897b%2FScreen%20Shot%202019-04-23%20at%203.34.05%20PM.png?1556058857202" width="600" alt="Running Pace Calculator Demo preview" />
 
 ## Try It out
-* **Web App:** Available live at [running-pace-calculator.glitch.me](https://running-pace-calculator.glitch.me/) 🏃🏼‍♀️
+* **Web App:** Available live at [[running-pace-calculator.glitch.me](https://greenido.github.io/running-pace-calc/) 🏃🏼‍♀️]
+
 * **Chrome Extension:** [Install from the Chrome Web Store](https://chromewebstore.google.com/detail/running-pace-calculator/beofpjkjbfoamcofpnedjamkkocbffoc) 🏃🏽‍♂️
 
 ## Under the Hood
