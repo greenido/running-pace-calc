@@ -40,4 +40,4 @@ To test the extension locally:
 2. Toggle "Developer Mode" in the top right.
 3. Click "Load unpacked" and select the `chrome_ext/` directory.
 
-Enjoy the runs and keep chasing that PR!
+Enjoy the runs and keep chasing that PR! 🏅
