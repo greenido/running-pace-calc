@@ -3,13 +3,14 @@
 
 # TEAM
 
-    Ido Green -- CEO -- @greenido
+    Ido Green -- @greenido
 
 # THANKS
 
-    @Glitch, @Google and all my running friends.
+    @Google and all my running friends.
 
 # TECHNOLOGY COLOPHON
 
-    CSS3, HTML5
-    Apache Server Configs, jQuery, Modernizr, Normalize.css
+    HTML5, CSS3, vanilla JavaScript (ES modules)
+    Normalize.css
+    No framework, no build step, no tracking.
