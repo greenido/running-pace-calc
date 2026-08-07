@@ -1,141 +1,235 @@
 //
-// Listen to the sliders and calculate the pace base on the time and distance. Simple.
+// DOM wiring for the pace calculator. All the arithmetic lives in pace.js.
 //
 // @Author: Ido
 // @date: April 2019
 //
-syncDistanceOptions();
-calcPace();
 
-loadEventListeners();
+import {
+  parseClock,
+  formatClock,
+  formatPace,
+  paceFromTime,
+  timeFromPace,
+  splits,
+} from './pace.js';
 
-//
-//
-//
-function loadEventListeners(){
-  document.getElementById('hourSlide').addEventListener('input', calcPace);
-  document.getElementById('minuteSlide').addEventListener('input', calcPace);
-  document.getElementById('secondSlide').addEventListener('input', calcPace);
-  document.getElementById('distanceRadioFields').addEventListener('change', calcPace);
-  document.getElementById('unitRadioFields').addEventListener('change', calcPace);
+const el = (id) => document.getElementById(id);
+
+let lastMode = null;
+
+// marathon-food.html loads this script too. Without this guard the module
+// throws on any page that has no calculator markup.
+if (el('paceForm')) {
+  init();
 }
 
-//
-//
-//
-function getUnit() {
-  let radios = document.getElementsByName('unit');
-  for (var i = 0; i < radios.length; i++) {
-    if (radios[i].checked) {
-      return radios[i].value;
-    }
+function init() {
+  restoreFromUrl();
+  render();
+
+  const form = el('paceForm');
+  form.addEventListener('input', onFormChange);
+  form.addEventListener('change', onFormChange);
+  el('shareBtn').addEventListener('click', share);
+}
+
+function onFormChange(event) {
+  // Typing a custom distance should select the custom radio for you.
+  if (event.target === el('customDistance')) {
+    el('dist-custom').checked = true;
   }
-  return 'mi';
+  render();
 }
 
 //
+// Reading the form
 //
+
+function getUnit() {
+  return el('unit-km').checked ? 'km' : 'mi';
+}
+
+function getMode() {
+  return el('mode-pace').checked ? 'pace' : 'time';
+}
+
+function getDistance() {
+  if (el('dist-custom').checked) {
+    const custom = Number.parseFloat(el('customDistance').value);
+    return Number.isFinite(custom) && custom > 0 ? custom : null;
+  }
+  for (const radio of document.getElementsByName('distance')) {
+    if (radio.checked && radio.value) return Number.parseFloat(radio.value);
+  }
+  return null;
+}
+
+//
+// Each preset radio carries both distances as data attributes, so switching
+// unit is a relabel rather than a conversion.
 //
 function syncDistanceOptions() {
-  let unit = getUnit();
-  let radios = document.getElementsByName('distance');
-
-  for (var i = 0; i < radios.length; i++) {
-    radios[i].value = radios[i].dataset[unit];
-    radios[i].nextElementSibling.textContent = radios[i].dataset[unit + 'Label'];
+  const unit = getUnit();
+  for (const radio of document.getElementsByName('distance')) {
+    if (!radio.dataset[unit]) continue;
+    radio.value = radio.dataset[unit];
+    radio.nextElementSibling.textContent = radio.dataset[`${unit}Label`];
   }
+  el('customUnitLabel').textContent = unitLabel(unit);
+}
+
+function unitLabel(unit) {
+  return unit === 'km' ? 'Km' : 'Mi';
 }
 
 //
+// Rendering
 //
-//
-function calcPace() {
+
+function render() {
+  const mode = getMode();
+  if (lastMode && mode !== lastMode) carryOver(lastMode, mode);
+  lastMode = mode;
+
   syncDistanceOptions();
-  
-  function getRaceDistance() {
-    let radios = document.getElementsByName('distance');
-    let val;
-    for (var i = 0; i < radios.length; i++) {
-      if (radios[i].type === 'radio' && radios[i].checked) {
-          // get value, set checked flag or do whatever you need to
-          val = parseFloat(radios[i].value);
-        }
-      }
-    return val; // return value of checked radio or undefined if none checked
+
+  const distance = getDistance();
+  const unit = unitLabel(getUnit());
+  const hours = Number(el('hourSlide').value);
+  const minutes = Number(el('minuteSlide').value);
+  const seconds = Number(el('secondSlide').value);
+
+  el('hourSlideValue').textContent = hours;
+  el('minuteSlideValue').textContent = String(minutes).padStart(2, '0');
+  el('secondSlideValue').textContent = String(seconds).padStart(2, '0');
+
+  // In pace mode the hours slider is meaningless — a per-mile pace is never
+  // measured in hours — so it is hidden and the minutes/seconds are the pace.
+  el('hourSliderRow').hidden = mode === 'pace';
+
+  let totalSeconds;
+  let paceSeconds;
+  if (mode === 'pace') {
+    paceSeconds = minutes * 60 + seconds;
+    totalSeconds = timeFromPace(paceSeconds, distance);
+  } else {
+    totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    paceSeconds = paceFromTime(totalSeconds, distance);
+  }
+
+  el('TimeValue').textContent = formatClock(totalSeconds);
+  el('PaceValue').textContent = `${formatPace(paceSeconds)} Min/${unit}`;
+
+  el('timeCard').classList.toggle('is-result', mode === 'pace');
+  el('paceCard').classList.toggle('is-result', mode === 'time');
+
+  renderSplits(paceSeconds, distance, unit);
+  writeUrl(mode, totalSeconds, paceSeconds);
+}
+
+function renderSplits(paceSeconds, distance, unit) {
+  const rows = splits(paceSeconds, distance);
+  const body = el('splitsBody');
+  el('splitsSummary').textContent = `Splits (${rows.length} × ${unit})`;
+
+  body.replaceChildren(
+    ...rows.map((row) => {
+      const tr = document.createElement('tr');
+      const mark = document.createElement('td');
+      const time = document.createElement('td');
+      mark.textContent = row.partial ? `${row.mark} ${unit} (finish)` : `${row.mark} ${unit}`;
+      time.textContent = formatClock(row.cumulative);
+      tr.append(mark, time);
+      return tr;
+    }),
+  );
+}
+
+//
+// Switching mode keeps the numbers you were looking at, rather than resetting
+// the sliders to whatever they happened to be.
+//
+function carryOver(from, to) {
+  const distance = getDistance();
+  if (!distance) return;
+
+  if (from === 'time' && to === 'pace') {
+    const pace = paceFromTime(
+      Number(el('hourSlide').value) * 3600 +
+        Number(el('minuteSlide').value) * 60 +
+        Number(el('secondSlide').value),
+      distance,
+    );
+    if (pace !== null) setSliders(0, Math.round(pace));
+    return;
+  }
+
+  const total = timeFromPace(Number(el('minuteSlide').value) * 60 + Number(el('secondSlide').value), distance);
+  if (total !== null) setSliders(Math.floor(total / 3600), Math.round(total % 3600));
+}
+
+//
+// Sliders top out at 24h / 59m / 59s, so a 100 mile shuffle has to clamp.
+//
+function setSliders(hours, remainderSeconds) {
+  const clampedHours = Math.min(hours, 24);
+  el('hourSlide').value = clampedHours;
+  el('minuteSlide').value = Math.min(Math.floor(remainderSeconds / 60), 59);
+  el('secondSlide').value = Math.min(remainderSeconds % 60, 59);
+}
+
+//
+// Shareable URL state
+//
+
+function writeUrl(mode, totalSeconds, paceSeconds) {
+  const params = new URLSearchParams({
+    u: getUnit(),
+    mode,
+    d: String(getDistance() ?? ''),
+    t: mode === 'pace' ? formatPace(paceSeconds) : formatClock(totalSeconds),
+  });
+  history.replaceState(null, '', `?${params}`);
+}
+
+function restoreFromUrl() {
+  const params = new URLSearchParams(location.search);
+  if (![...params.keys()].length) return;
+
+  if (params.get('u') === 'km') el('unit-km').checked = true;
+  if (params.get('mode') === 'pace') el('mode-pace').checked = true;
+  syncDistanceOptions();
+
+  const distance = Number.parseFloat(params.get('d'));
+  if (Number.isFinite(distance) && distance > 0) selectDistance(distance);
+
+  const seconds = parseClock(params.get('t') ?? '');
+  if (seconds !== null) {
+    setSliders(Math.floor(seconds / 3600), seconds % 3600);
+  }
+}
+
+function selectDistance(distance) {
+  for (const radio of document.getElementsByName('distance')) {
+    if (Math.abs(Number.parseFloat(radio.value) - distance) < 0.01) {
+      radio.checked = true;
+      return;
     }
-  
-  //
-  //
-  //
-  function getHours() {
-    let myValue = document.getElementById('hourSlide').value;
-    document.getElementById('hourSliderValue').innerHTML = myValue;
-    return parseFloat(myValue*60);
   }
+  el('dist-custom').checked = true;
+  el('customDistance').value = distance;
+}
 
-  //
-  //
-  //
-  function getMinutes() {
-    let myValue = document.getElementById('minuteSlide').value;
-    if(myValue >= 10){
-        document.getElementById('minuteSliderValue').innerHTML = myValue;
-      } else if(myValue <= 9) {
-        document.getElementById('minuteSliderValue').innerHTML = '0' + myValue;
-      }
-    return parseFloat(myValue);
+async function share() {
+  const button = el('shareBtn');
+  try {
+    await navigator.clipboard.writeText(location.href);
+    button.textContent = 'Link copied ✓';
+  } catch {
+    button.textContent = 'Copy from the address bar';
   }
-
-  //
-  //
-  //  
-  function getSeconds() {
-    let myValue = document.getElementById('secondSlide').value;
-    if(myValue >= 10){
-        document.getElementById('secondSliderValue').innerHTML = myValue;
-      } else if(myValue <= 9) {
-        document.getElementById('secondSliderValue').innerHTML = '0' + myValue;
-      }
-    return parseFloat(myValue / 60);
-  }
-
-  //
-  //
-  //
-  let totalMinutes = getHours() + getMinutes() + getSeconds();
-  let paceMinutes = totalMinutes / getRaceDistance();
-  let wholePaceMinutes = Math.floor(paceMinutes);
-  let paceSeconds = Math.round((paceMinutes - wholePaceMinutes) * 60);
-
-  //console.log("* totalMinutes: " + totalMinutes + " | justSecMile: " + 
-  //            justSecondsMile + " | wholeMinuteMile: " +  wholeMinuteMile); 
-  
-  //
-  //
-  //
-  function justSecondsFormatted(justSeconds) {
-    if (justSeconds > 9 ){
-      return justSeconds;
-    }else if (justSeconds < 10 ) {
-      return '0' + justSeconds;
-    }
-  };
-
-  //
-  //
-  //
-  function finalPace(justSeconds, wholeMinute){
-    if (justSecondsFormatted(justSeconds) == 60) {
-      let setPace = wholeMinute + 1 + ':00';
-      return setPace;
-    }else {
-      let setPace = wholeMinute + ':' + justSecondsFormatted(justSeconds);
-      return setPace;
-    }
-  }
-
-  let paceUnit = getUnit() === 'km' ? 'Km' : 'Mi';
-  document.getElementById('PaceValue').innerHTML = finalPace(paceSeconds, wholePaceMinutes) + '<span> Min/' + paceUnit + '</span>';
-
-
+  setTimeout(() => {
+    button.textContent = 'Copy link';
+  }, 2000);
 }
