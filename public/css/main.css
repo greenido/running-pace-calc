@@ -40,9 +40,30 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+/* Palette
+***********************************/
+/* Three navy tones give the page some depth instead of floating everything on
+   one flat field. The accent is a warm gold rather than pure yellow: #ffff00
+   on saturated blue measures fine but visibly shimmers at the edges, which is
+   worst on small text and thin rules. */
+:root {
+  --bg: #101a3d;
+  --surface: #1b2350;
+  --surface-raised: #27306b;
+  --border: #414c8f;
+  --border-strong: #5a67ad;
+
+  --text: #eef1ff;
+  --text-muted: #b3bce4;
+
+  --accent: #ffd166;
+  --accent-hover: #ffdf94;
+  --accent-ink: #1a1400;
+}
+
 body {
-  background-color: #040473c7;
-  color: #f7f7f7;
+  background-color: var(--bg);
+  color: var(--text);
   font-family: arial;
   font-size: 1em;
 }
@@ -86,7 +107,7 @@ h2 {
   gap: 6px;
 }
 .output {
-  border: 2px solid #ccc;
+  border: 2px solid var(--border-strong);
   border-radius:30px;
   display: inline-block;
   font-size: 2.0rem;
@@ -141,8 +162,8 @@ h2 {
 
 /* Whichever card is the answer (rather than the input) gets the emphasis. */
 .result-item.is-result .output {
-  border-color: yellow;
-  color: yellow;
+  border-color: var(--accent);
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -169,40 +190,40 @@ input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 23.3px;
   cursor: pointer;
-  box-shadow: 0px 0px 0px #1df000, 0px 0px 0px #28ff0b;
-  background: #dedcde;
+  
+  background: var(--surface-raised);
   border-radius: 1.3px;
-  border: 0.2px solid #010101;
+  border: 1px solid var(--border);
 }
 input[type=range]::-webkit-slider-thumb {
-  box-shadow: 0.9px 0.9px 1px #d7d7ff, 0px 0px 0.9px #f1f1ff;
-  border: 2.3px solid #b4b9b9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--border-strong);
   height: 40px;
   width: 24px;
   border-radius: 50px;
-  background: #ffffff;
+  background: var(--accent);
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: -8.55px;
 }
 input[type=range]:focus::-webkit-slider-runnable-track {
-  background: #eae9ea;
+  background: var(--border);
 }
 input[type=range]::-moz-range-track {
   width: 100%;
   height: 23.3px;
   cursor: pointer;
-   border: 2.3px solid #b4b9b9;
-  background: #dedcde;
+   border: 2px solid var(--border-strong);
+  background: var(--surface-raised);
   
 }
 input[type=range]::-moz-range-thumb {
-  box-shadow: 0.9px 0.9px 1px #d7d7ff, 0px 0px 0.9px #f1f1ff;
-  border: 2.3px solid #b4b9b9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--border-strong);
   height: 40px;
   width: 24px;
   border-radius: 50px;
-  background: #ffffff;
+  background: var(--accent);
   cursor: pointer;
 }
 input[type=range]::-ms-track {
@@ -214,35 +235,38 @@ input[type=range]::-ms-track {
   color: transparent;
 }
 input[type=range]::-ms-fill-lower {
-  background: #d2cfd2;
-  border: 0.2px solid #010101;
+  background: var(--accent);
+  border: 1px solid var(--border);
   border-radius: 2.6px;
-  box-shadow: 0px 0px 0px #1df000, 0px 0px 0px #28ff0b;
+  
 }
 input[type=range]::-ms-fill-upper {
-  background: #dedcde;
-  border: 0.2px solid #010101;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 2.6px;
-  box-shadow: 0px 0px 0px #1df000, 0px 0px 0px #28ff0b;
+  
 }
 input[type=range]::-ms-thumb {
-  box-shadow: 0.9px 0.9px 1px #d7d7ff, 0px 0px 0.9px #f1f1ff;
-  border: 2.3px solid #b4b9b9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--border-strong);
   height: 40px;
   width: 24px;
   border-radius: 50px;
-  background: #ffffff;
+  background: var(--accent);
   cursor: pointer;
   height: 23.3px;
 }
 input[type=range]:focus::-ms-fill-lower {
-  background: #dedcde;
+  background: var(--surface-raised);
 }
 input[type=range]:focus::-ms-fill-upper {
-  background: #eae9ea;
+  background: var(--border);
 }
 
 /*radio buttons*/
+/* Checked and unchecked used to differ only by a small grey tick on the same
+   pale circle, which is nearly invisible at a glance. Selection is now a solid
+   accent fill. */
 .form-radio
 {
      -webkit-appearance: none;
@@ -250,12 +274,12 @@ input[type=range]:focus::-ms-fill-upper {
      appearance: none;
      display: inline-block;
      position: relative;
-     background-color: #f1f1f1;
-     color: #666;
+     background-color: var(--surface-raised);
+     border: 2px solid var(--border-strong);
+     color: var(--accent-ink);
      top: 10px;
-     height: 30px;
-     width: 30px;
-     border: 0;
+     height: 28px;
+     width: 28px;
      border-radius: 50px;
      cursor: pointer;
      margin-right: 7px;
@@ -264,48 +288,52 @@ input[type=range]:focus::-ms-fill-upper {
 .form-radio:checked::before
 {
      position: absolute;
-     font: 13px/1 'Open Sans', sans-serif;
-     left: 11px;
-     top: 7px;
+     font: 700 15px/1 'Open Sans', sans-serif;
+     left: 8px;
+     top: 4px;
      content: '\02143';
      transform: rotate(40deg);
 }
 .form-radio:hover
 {
-     background-color: #f7f7f7;
+     border-color: var(--accent);
 }
 .form-radio:checked
 {
-     background-color: #f1f1f1;
+     background-color: var(--accent);
+     border-color: var(--accent);
 }
 label {
-     font: 300 16px/1.7 'Open Sans', sans-serif;
-     color: #f7f7f7;
+     /* 300 weight optically thins out badly as light text on a dark field. */
+     font: 400 16px/1.7 'Open Sans', sans-serif;
+     color: var(--text);
      cursor: pointer;
 }
 
 .sliders-div {
-  border: 1px solid #c0c0c0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
   margin: 1em 2px;
 }
 
 .result-item.is-result h2 {
-  color: yellow;
+  color: var(--accent);
 }
 
 footer {
-  color: white;
+  color: var(--text);
 }
-footer > a {
-  color: #55ff84;
+footer a {
+  color: var(--accent);
 }
 
 #otherlinks {
-  background: lightblue;
-  color: darkblue;
-  padding: 1em;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 22px;
-  
+  color: var(--text);
+  padding: 1em;
 }
 
 /* Marathon nutrition page styles */
@@ -314,11 +342,27 @@ footer > a {
   padding: 0.8em;
 }
 
+/* This used to be `background: red`, which put default blue link text on a
+   red field — the worst pairing on the page. */
 .container a {
-  background: red;
+  color: var(--accent);
+  text-underline-offset: 3px;
 }
 /* Mode / unit / distance fieldsets
 ***********************************/
+fieldset {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+legend {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
 #modeRadioFields,
 #unitRadioFields {
   margin-bottom: 10px;
@@ -329,7 +373,7 @@ footer > a {
    renders white-on-white. */
 .custom-distance #customDistance {
   background: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   color: #222;
   padding: 2px 6px;
@@ -347,20 +391,36 @@ footer > a {
   font-weight: 700;
 }
 
-/* Share button
+/* Buttons
 ***********************************/
-#shareBtn {
-  background: transparent;
-  border: 2px solid #ccc;
+/* Transparent buttons with a faint hairline read as text, not as something you
+   can press. Both get a filled surface; the primary action gets the accent. */
+#shareBtn,
+#printBtn {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
   border-radius: 30px;
-  color: #f7f7f7;
+  color: var(--text);
   cursor: pointer;
   font-size: 1rem;
-  padding: 8px 18px;
+  font-weight: 600;
+  padding: 9px 20px;
+}
+
+#shareBtn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
 #shareBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+#printBtn:hover {
+  background: var(--border);
+  border-color: var(--border-strong);
 }
 
 /* Splits
@@ -383,7 +443,7 @@ footer > a {
 
 .splits th,
 .splits td {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid var(--border);
   padding: 4px 8px;
   text-align: left;
 }
@@ -401,14 +461,14 @@ input[type='range']:focus-visible,
 #customDistance:focus-visible,
 #shareBtn:focus-visible,
 .splits summary:focus-visible {
-  outline: 3px solid yellow;
+  outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
 
 /* Tabs
 ***********************************/
 .tabs {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  border-bottom: 1px solid var(--border);
   display: flex;
   gap: 4px;
   margin-bottom: 12px;
@@ -418,20 +478,30 @@ input[type='range']:focus-visible,
   background: transparent;
   border: 0;
   border-bottom: 3px solid transparent;
-  color: #f7f7f7;
+  border-radius: 8px 8px 0 0;
+  color: var(--text-muted);
   cursor: pointer;
   font-size: 1.05rem;
-  padding: 10px 16px;
+  font-weight: 600;
+  padding: 10px 18px;
 }
 
+.tabs [role='tab']:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* A filled tab reads as selected at a glance. Coloured text alone relied on
+   the accent doing all the work, which is exactly where the old pure yellow
+   shimmered against the blue. */
 .tabs [role='tab'][aria-selected='true'] {
-  border-bottom-color: yellow;
-  color: yellow;
-  font-weight: 700;
+  background: var(--surface-raised);
+  border-bottom-color: var(--accent);
+  color: var(--text);
 }
 
 .tabs [role='tab']:focus-visible {
-  outline: 3px solid yellow;
+  outline: 3px solid var(--accent);
   outline-offset: -3px;
 }
 
@@ -451,7 +521,7 @@ input[type='range']:focus-visible,
 #predictUnit,
 #splitStrategy {
   background: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   color: #222;
   font-size: 1rem;
@@ -478,7 +548,7 @@ input[type='range']:focus-visible,
 
 .data-table th,
 .data-table td {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid var(--border);
   padding: 5px 8px;
   text-align: left;
 }
@@ -488,7 +558,7 @@ input[type='range']:focus-visible,
 }
 
 .data-table tr.is-source td {
-  color: yellow;
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -501,20 +571,6 @@ input[type='range']:focus-visible,
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-#printBtn {
-  background: transparent;
-  border: 2px solid #ccc;
-  border-radius: 30px;
-  color: #f7f7f7;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 8px 18px;
-}
-
-#printBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
 }
 
 /* Pace band
