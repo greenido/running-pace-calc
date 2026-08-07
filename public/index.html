@@ -15,7 +15,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
-    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="assets/favicon.png" type="image/png" />
+
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#26268c" />
+    <meta name="mobile-web-app-capable" content="yes" />
 
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/main.css" />
@@ -23,17 +27,95 @@
   <body>
     <div class="container">
       <div class="wrapper">
-        <h2>🏃🏼‍♀️ Running Pace Calculator</h2>
+        <h1>🏃🏼‍♀️ Running Pace Calculator</h1>
+
+        <div class="tabs" role="tablist" aria-label="Calculator sections">
+          <button
+            type="button"
+            role="tab"
+            id="tab-calc"
+            aria-controls="panel-calc"
+            aria-selected="true"
+          >
+            Pace
+          </button>
+          <button
+            type="button"
+            role="tab"
+            id="tab-predict"
+            aria-controls="panel-predict"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            Predict &amp; Train
+          </button>
+        </div>
+
+        <section id="panel-calc" role="tabpanel" aria-labelledby="tab-calc">
         <form id="paceForm">
           <div class="row radio-wrapper">
-            <fieldset id="unitRadioFields" style="margin-bottom: 10px;">
-              <legend>Select Pace Unit:</legend>
-              <label><input class="form-radio" type="radio" name="unit" value="mi" id="unit-mi" checked="checked"/> Miles</label>
-              <label><input class="form-radio" type="radio" name="unit" value="km" id="unit-km" /> Kilometers</label>
+            <fieldset id="modeRadioFields">
+              <legend>What Are You Solving For?</legend>
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="mode"
+                  value="time"
+                  id="mode-time"
+                  checked="checked"
+                /><span>I know my goal time → show pace</span></label
+              >
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="mode"
+                  value="pace"
+                  id="mode-pace"
+                /><span>I know my goal pace → show time</span></label
+              >
             </fieldset>
+
+            <fieldset id="unitRadioFields">
+              <legend>Select Pace Unit:</legend>
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="unit"
+                  value="mi"
+                  id="unit-mi"
+                  checked="checked"
+                /><span>Miles</span></label
+              >
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="unit"
+                  value="km"
+                  id="unit-km"
+                /><span>Kilometers</span></label
+              >
+            </fieldset>
+
             <fieldset id="distanceRadioFields">
               <legend>Select A Distance:</legend>
-               <label
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value="3.1"
+                  data-mi="3.1"
+                  data-km="5"
+                  data-mi-label="3.1 Mi"
+                  data-km-label="5 Km"
+                  id="5k"
+                /><span class="distance-label">3.1 Mi</span></label
+              >
+              <label
                 ><input
                   class="form-radio"
                   type="radio"
@@ -45,6 +127,19 @@
                   data-km-label="10 Km"
                   id="10k"
                 /><span class="distance-label">6.2 Mi</span></label
+              >
+              <label
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value="9.3"
+                  data-mi="9.3"
+                  data-km="15"
+                  data-mi-label="9.3 Mi"
+                  data-km-label="15 Km"
+                  id="15k"
+                /><span class="distance-label">9.3 Mi</span></label
               >
               <label
                 ><input
@@ -125,12 +220,33 @@
                   id="hundredmiler"
                 /><span class="distance-label">100 Mi</span></label
               >
+              <label class="custom-distance"
+                ><input
+                  class="form-radio"
+                  type="radio"
+                  name="distance"
+                  value=""
+                  id="dist-custom"
+                /><span class="distance-label">Custom</span>
+                <input
+                  type="number"
+                  id="customDistance"
+                  min="0.1"
+                  step="0.1"
+                  value="10"
+                  aria-label="Custom distance"
+                />
+                <span id="customUnitLabel">Mi</span></label
+              >
             </fieldset>
           </div>
+
           <div class="sliders-div row">
             <div class="slider-wrapper">
-              <label
-                >Hours:
+              <div class="slider-row" id="hourSliderRow">
+                <label for="hourSlide"
+                  >Hours: <output id="hourSlideValue">3</output></label
+                >
                 <input
                   type="range"
                   min="0"
@@ -139,10 +255,12 @@
                   class="slider"
                   id="hourSlide"
                   step="1"
-                  aria-label="Hours"
-              /></label>
-              <label
-                >Minutes:
+                />
+              </div>
+              <div class="slider-row">
+                <label for="minuteSlide"
+                  >Minutes: <output id="minuteSlideValue">30</output></label
+                >
                 <input
                   type="range"
                   min="0"
@@ -151,10 +269,12 @@
                   class="slider"
                   id="minuteSlide"
                   step="1"
-                  aria-label="Minutes"
-              /></label>
-              <label
-                >Seconds:
+                />
+              </div>
+              <div class="slider-row">
+                <label for="secondSlide"
+                  >Seconds: <output id="secondSlideValue">00</output></label
+                >
                 <input
                   type="range"
                   min="0"
@@ -163,62 +283,146 @@
                   class="slider"
                   id="secondSlide"
                   step="1"
-                  aria-label="Seconds"
-              /></label>
+                />
+              </div>
             </div>
           </div>
         </form>
+
         <div class="row results-row">
-          <div class="result-item time-wrapper">
-            <h1>Total Time</h1>
-            <div class="output">
-              <span id="hourSliderValue">0</span><span>:</span
-              ><span id="minuteSliderValue">00</span><span>:</span
-              ><span id="secondSliderValue">00</span>
-            </div>
+          <div class="result-item time-wrapper" id="timeCard">
+            <h2>Total Time</h2>
+            <p class="output" id="TimeValue" aria-live="polite">03:30:00</p>
           </div>
-          <div class="result-item pace-wrapper">
-            <h1>Pace</h1>
-            <h3 class="output" id="PaceValue" aria-live="polite"></h3>
+          <div class="result-item pace-wrapper is-result" id="paceCard">
+            <h2>Pace</h2>
+            <p class="output" id="PaceValue" aria-live="polite">8:01 Min/Mi</p>
           </div>
         </div>
+
+        <div class="row button-row">
+          <button type="button" id="shareBtn">Copy link</button>
+          <button type="button" id="printBtn">Print pace band</button>
+        </div>
+
+        <details class="splits" id="splitsPanel">
+          <summary id="splitsSummary">Splits</summary>
+
+          <label class="strategy" for="splitStrategy"
+            >Pacing strategy:
+            <select id="splitStrategy">
+              <option value="0" selected>Even pace</option>
+              <option value="0.01">Negative split — 1% faster back half</option>
+              <option value="0.02">Negative split — 2% faster back half</option>
+              <option value="0.04">Negative split — 4% faster back half</option>
+            </select>
+          </label>
+
+          <table>
+            <caption id="splitsCaption">Even pace</caption>
+            <thead>
+              <tr>
+                <th scope="col">Distance</th>
+                <th scope="col">Elapsed</th>
+              </tr>
+            </thead>
+            <tbody id="splitsBody"></tbody>
+          </table>
+        </details>
+      </section>
+
+      <section id="panel-predict" role="tabpanel" aria-labelledby="tab-predict" hidden>
+        <form id="predictForm">
+          <fieldset>
+            <legend>A Race You Have Actually Run</legend>
+            <label for="raceDistance"
+              >Distance:
+              <select id="raceDistance"></select>
+            </label>
+            <label for="raceTime"
+              >Time:
+              <input
+                type="text"
+                id="raceTime"
+                value="45:00"
+                inputmode="numeric"
+                placeholder="45:00"
+                size="9"
+              />
+            </label>
+            <label for="predictUnit"
+              >Show paces in:
+              <select id="predictUnit">
+                <option value="mi" selected>Miles</option>
+                <option value="km">Kilometers</option>
+              </select>
+            </label>
+          </fieldset>
+        </form>
+
+        <p class="hint" id="predictError" role="alert" hidden>
+          That time doesn't look right — try something like 45:00 or 3:30:00.
+        </p>
+
+        <h2>What Else Could You Run?</h2>
+        <p class="hint">
+          Riegel's formula, scaled from your result. It gets optimistic the
+          further it reaches — a marathon predicted off a 5K assumes endurance
+          the 5K never tested.
+        </p>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Distance</th>
+              <th scope="col">Predicted</th>
+              <th scope="col">Pace</th>
+            </tr>
+          </thead>
+          <tbody id="predictBody"></tbody>
+        </table>
+
+        <h2>Training Paces <span id="vdotValue"></span></h2>
+        <p class="hint">
+          From the Daniels/Gilbert VO<sub>2</sub> model. Easy days are meant to
+          feel too easy — that is the point of them.
+        </p>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Zone</th>
+              <th scope="col">Pace</th>
+            </tr>
+          </thead>
+          <tbody id="trainingBody"></tbody>
+        </table>
+      </section>
       </div>
     </div>
 
     <hr />
     <footer>
       <div id="otherlinks">
-        <a href="marathon-food.html" target="_blank">Marathon Nutrition</a> &
+        <a href="marathon-food.html">Marathon Nutrition</a> &
         <a
           href="https://www.trainingpeaks.com/guides/marathon-training/"
           target="_blank"
+          rel="noopener"
         >
           Training</a
         >
 
-        <br><br>
-        <h3>
+        <p>
           🏃 🏃 The five S's of sports training are: Stamina, Speed, Strength,
           Skill and Spirit; but the greatest of these is Spirit.
-        </h3>
+        </p>
       </div>
 
-      <br /><br />
-      <br />
-      🏃🏽‍♂️<a href="https://ido-green.appspot.com">Ido's Projects</a> 🏃🏼‍♀️
-      <small>Updated: May 2026</small>
+      <p>
+        🏃🏽‍♂️<a href="https://ido-green.appspot.com">Ido's Projects</a> 🏃🏼‍♀️
+        <small>Updated: August 2026</small>
+      </p>
     </footer>
 
-    <!--  JS  -->
-    <script src="js/main.js"></script>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
+    <script type="module" src="js/main.js"></script>
   </body>
 </html>

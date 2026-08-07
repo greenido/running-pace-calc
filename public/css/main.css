@@ -45,7 +45,6 @@ body {
   color: #f7f7f7;
   font-family: arial;
   font-size: 1em;
-  border-raduis: 22px;
 }
 h1 {
   font-size: 1.8rem;
@@ -66,12 +65,25 @@ h2 {
 #distanceRadioFields {
   padding: 10px 15px 20px;
 }
-#distanceRadioFields label{
+/* Keep each radio glued to its own label — without this the text wraps
+   mid-label on narrow screens and "42.2" ends up on a different line to "Km". */
+#distanceRadioFields label,
+#unitRadioFields label {
+  align-items: center;
+  display: inline-flex;
   font-size: 1.1rem;
-
+  gap: 6px;
+  margin-right: 14px;
+  white-space: nowrap;
 }
-.slider {
 
+/* The mode options are sentences, so they get a line each and are allowed
+   to wrap rather than pushing the fieldset off-screen. */
+#modeRadioFields label {
+  align-items: center;
+  display: flex;
+  font-size: 1.1rem;
+  gap: 6px;
 }
 .output {
   border: 2px solid #ccc;
@@ -107,9 +119,10 @@ h2 {
   min-width: 0;
 }
 
-.results-row h1 {
+.results-row h2 {
   flex: 0 0 auto;
   font-size: clamp(0.9rem, 2.8vw, 1.2rem);
+  font-weight: 600;
   margin: 0;
   white-space: nowrap;
 }
@@ -119,13 +132,27 @@ h2 {
   display: block;
   flex: 1 1 auto;
   font-size: clamp(0.9rem, 2.8vw, 1.25rem);
+  margin: 0;
   min-width: 0;
   padding: 6px 8px;
   text-align: center;
   white-space: nowrap;
 }
-.slider-wrapper{
 
+/* Whichever card is the answer (rather than the input) gets the emphasis. */
+.result-item.is-result .output {
+  border-color: yellow;
+  color: yellow;
+  font-weight: 700;
+}
+
+/* Side by side, a zero-padded "03:30:00" clips against its own border on a
+   phone, so give each card the full width instead. */
+@media (max-width: 480px) {
+  .results-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
 }
 
 /*INPUT SLIDERS
@@ -253,7 +280,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 label {
      font: 300 16px/1.7 'Open Sans', sans-serif;
-     color: f7f7f7;
+     color: #f7f7f7;
      cursor: pointer;
 }
 
@@ -262,7 +289,7 @@ label {
   margin: 1em 2px;
 }
 
-.pace-wrapper {
+.result-item.is-result h2 {
   color: yellow;
 }
 
@@ -289,4 +316,249 @@ footer > a {
 
 .container a {
   background: red;
+}
+/* Mode / unit / distance fieldsets
+***********************************/
+#modeRadioFields,
+#unitRadioFields {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+}
+
+/* Without an explicit colour this inherits the white `label` colour and
+   renders white-on-white. */
+.custom-distance #customDistance {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  color: #222;
+  padding: 2px 6px;
+  width: 5.5em;
+}
+
+/* Slider rows
+***********************************/
+.slider-row[hidden] {
+  display: none;
+}
+
+.slider-row output {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* Share button
+***********************************/
+#shareBtn {
+  background: transparent;
+  border: 2px solid #ccc;
+  border-radius: 30px;
+  color: #f7f7f7;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 8px 18px;
+}
+
+#shareBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Splits
+***********************************/
+.splits {
+  margin: 1em 0;
+}
+
+.splits summary {
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 6px 0;
+}
+
+.splits table {
+  margin-top: 8px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.splits th,
+.splits td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 8px;
+  text-align: left;
+}
+
+.splits td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus visibility
+***********************************/
+/* Both the range inputs and the custom radios set `outline: none` with no
+   replacement, which leaves keyboard users with no idea where they are. */
+.form-radio:focus-visible,
+input[type='range']:focus-visible,
+#customDistance:focus-visible,
+#shareBtn:focus-visible,
+.splits summary:focus-visible {
+  outline: 3px solid yellow;
+  outline-offset: 2px;
+}
+
+/* Tabs
+***********************************/
+.tabs {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.tabs [role='tab'] {
+  background: transparent;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  color: #f7f7f7;
+  cursor: pointer;
+  font-size: 1.05rem;
+  padding: 10px 16px;
+}
+
+.tabs [role='tab'][aria-selected='true'] {
+  border-bottom-color: yellow;
+  color: yellow;
+  font-weight: 700;
+}
+
+.tabs [role='tab']:focus-visible {
+  outline: 3px solid yellow;
+  outline-offset: -3px;
+}
+
+/* Predict & train
+***********************************/
+#predictForm fieldset {
+  padding: 10px 15px;
+}
+
+#predictForm label {
+  display: inline-block;
+  margin-right: 18px;
+}
+
+#raceDistance,
+#raceTime,
+#predictUnit,
+#splitStrategy {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  color: #222;
+  font-size: 1rem;
+  padding: 3px 6px;
+}
+
+.hint {
+  color: #d7d7ee;
+  font-size: 0.9rem;
+  margin: 4px 0 10px;
+  max-width: 60ch;
+}
+
+#predictError {
+  color: #ffd0d0;
+  font-weight: 700;
+}
+
+.data-table {
+  margin-bottom: 1.4em;
+  max-width: 520px;
+  width: 100%;
+}
+
+.data-table th,
+.data-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 5px 8px;
+  text-align: left;
+}
+
+.data-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table tr.is-source td {
+  color: yellow;
+  font-weight: 700;
+}
+
+.strategy {
+  display: block;
+  margin: 8px 0;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#printBtn {
+  background: transparent;
+  border: 2px solid #ccc;
+  border-radius: 30px;
+  color: #f7f7f7;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 8px 18px;
+}
+
+#printBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Pace band
+***********************************/
+/* Printing is for one thing only: a strip of splits you can carry. Everything
+   that is not the splits table is dropped, and the colours are inverted so it
+   does not empty a print cartridge. */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  form,
+  footer,
+  hr,
+  .tabs,
+  .button-row,
+  .results-row,
+  .hint,
+  #panel-predict {
+    display: none !important;
+  }
+
+  .splits summary,
+  .strategy {
+    display: none;
+  }
+
+  .splits table {
+    font-size: 11pt;
+    max-width: none;
+    width: auto;
+  }
+
+  .splits th,
+  .splits td {
+    border-bottom: 1px solid #999;
+    padding: 2px 10px;
+  }
+
+  #splitsCaption {
+    font-weight: 700;
+    padding-bottom: 6px;
+    text-align: left;
+  }
 }

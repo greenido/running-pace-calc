@@ -1,19 +1,19 @@
 {
   "name": "running-pace-calculator",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "running pace calculator that works everywhere",
-  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.17.3"
+    "start": "npx --yes serve public",
+    "test": "node --test test/*.test.js",
+    "build:ext": "node scripts/build-extension.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "repository": {
-    "url": "https://github.com/greenido/running-pace-calculator"
+    "type": "git",
+    "url": "https://github.com/greenido/running-pace-calc"
   },
   "keywords": [
     "node",
