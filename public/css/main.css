@@ -391,3 +391,16 @@ footer > a {
 .splits td {
   font-variant-numeric: tabular-nums;
 }
+
+/* Focus visibility
+***********************************/
+/* Both the range inputs and the custom radios set `outline: none` with no
+   replacement, which leaves keyboard users with no idea where they are. */
+.form-radio:focus-visible,
+input[type='range']:focus-visible,
+#customDistance:focus-visible,
+#shareBtn:focus-visible,
+.splits summary:focus-visible {
+  outline: 3px solid yellow;
+  outline-offset: 2px;
+}
