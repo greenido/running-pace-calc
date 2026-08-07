@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "npx --yes serve public",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "build:ext": "node scripts/build-extension.js"
   },
   "engines": {
     "node": ">=18.0.0"
