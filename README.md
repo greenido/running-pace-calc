@@ -33,10 +33,6 @@ Enter a race you have actually run and get:
 Both are estimates. They assume you have trained for the distance, and they know
 nothing about hills, heat, or how your taper went.
 
-## How Does It Look?
-
-<img src="https://cdn.glitch.com/17a325bd-b2e8-4805-bc29-d62b9d07897b%2FScreen%20Shot%202019-04-23%20at%203.34.05%20PM.png?1556058857202" width="600" alt="Running Pace Calculator Demo preview" />
-
 ## Try It out
 
 * **Web App:** [greenido.github.io/running-pace-calc](https://greenido.github.io/running-pace-calc/) 🏃🏼‍♀️

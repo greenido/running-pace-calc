@@ -3,7 +3,7 @@
 // with no signal, so everything it needs is cached up front.
 //
 
-const CACHE = 'pace-calc-v1';
+const CACHE = 'pace-calc-v3';
 
 const SHELL = [
   './',
@@ -21,12 +21,27 @@ const SHELL = [
   'assets/icon-512.png',
 ];
 
+//
+// Deliberately not cache.addAll(). Two reasons: it stores responses with the
+// redirect flag still set, which cannot later be served to a navigation, and
+// it is all-or-nothing, so one 404 would abort the entire install.
+//
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE)
-      .then((cache) => cache.addAll(SHELL))
-      .then(() => self.skipWaiting()),
+    (async () => {
+      const cache = await caches.open(CACHE);
+      await Promise.all(
+        SHELL.map(async (path) => {
+          try {
+            const response = await fetch(path, { cache: 'reload' });
+            if (response.ok) await cache.put(path, await withoutRedirectFlag(response));
+          } catch {
+            // A missing file should not stop the rest of the shell caching.
+          }
+        }),
+      );
+      await self.skipWaiting();
+    })(),
   );
 });
 
@@ -60,9 +75,10 @@ self.addEventListener('fetch', (event) => {
       });
 
       const fromNetwork = fetch(request)
-        .then((response) => {
-          if (response.ok) cache.put(request, response.clone());
-          return response;
+        .then(async (response) => {
+          const clean = await withoutRedirectFlag(response);
+          if (clean.ok) cache.put(request, clean.clone());
+          return clean;
         })
         .catch(() => null);
 
@@ -81,3 +97,19 @@ self.addEventListener('fetch', (event) => {
     })(),
   );
 });
+
+//
+// Chrome refuses a Response with `redirected === true` as the answer to a
+// navigation and fails the load outright — a blank chrome-error page. Any
+// redirect trips this: a host that rewrites /page.html to /page, or a
+// directory URL that gains a trailing slash. Rebuilding the response clears
+// the flag while keeping the body and headers.
+//
+async function withoutRedirectFlag(response) {
+  if (!response.redirected) return response;
+  return new Response(await response.blob(), {
+    status: response.status,
+    statusText: response.statusText,
+    headers: response.headers,
+  });
+}
