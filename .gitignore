@@ -1,3 +1,14 @@
+# Secrets
+.env
+.env.*
 
+# Dependencies
+node_modules/
+
+# Chrome extension build artifacts & signing key
 chrome_ext.pem
+chrome_ext.crx
 runner_calc_chrome_ext.zip
+
+# OS cruft
+.DS_Store
