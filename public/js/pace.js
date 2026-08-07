@@ -62,20 +62,41 @@ export function timeFromPace(secondsPerUnit, distance) {
 // Cumulative split times at each whole mile/km, plus the final partial leg
 // (a marathon ends on 42.2, so the last row is the 0.2).
 //
-export function splits(secondsPerUnit, distance) {
+// `negativeSplit` is the fraction faster the second half is run — 0.02 means
+// the back half is 2% quicker than the front. The finish time is held fixed,
+// so the first half slows to pay for it. Zero gives even pace.
+//
+export function splits(secondsPerUnit, distance, { negativeSplit = 0 } = {}) {
   if (!isUsable(secondsPerUnit) || !isUsable(distance) || distance <= 0) return [];
+  if (!Number.isFinite(negativeSplit) || negativeSplit <= -1 || negativeSplit >= 1) return [];
+
+  const elapsedAt = splitSchedule(secondsPerUnit, distance, negativeSplit);
 
   const rows = [];
   const whole = Math.floor(distance);
   for (let mark = 1; mark <= whole; mark++) {
-    rows.push({ mark, cumulative: secondsPerUnit * mark, partial: false });
+    rows.push({ mark, cumulative: elapsedAt(mark), partial: false });
   }
 
   // Guard against float noise: 42.2 - 42 is 0.19999999999999574.
   if (distance - whole > 0.001) {
-    rows.push({ mark: round1(distance), cumulative: secondsPerUnit * distance, partial: true });
+    rows.push({ mark: round1(distance), cumulative: elapsedAt(distance), partial: true });
   }
   return rows;
+}
+
+//
+// Solving total = firstPace*(D/2) + secondPace*(D/2) with
+// secondPace = firstPace*(1 - negativeSplit) gives the front-half pace.
+//
+function splitSchedule(secondsPerUnit, distance, negativeSplit) {
+  const total = secondsPerUnit * distance;
+  const half = distance / 2;
+  const firstPace = (2 * total) / (distance * (2 - negativeSplit));
+  const secondPace = firstPace * (1 - negativeSplit);
+
+  return (covered) =>
+    covered <= half ? firstPace * covered : firstPace * half + secondPace * (covered - half);
 }
 
 function isUsable(n) {

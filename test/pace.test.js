@@ -89,3 +89,27 @@ test('splits return nothing rather than throwing on bad input', () => {
   assert.deepEqual(splits(300, 0), []);
   assert.deepEqual(splits(NaN, 42.2), []);
 });
+
+test('a negative split holds the finish time but reorders the effort', () => {
+  const pace = paceFromTime(parseClock('3:30:00'), 42.2);
+  const even = splits(pace, 42.2);
+  const negative = splits(pace, 42.2, { negativeSplit: 0.02 });
+
+  // Same race, same finish.
+  assert.equal(formatClock(even.at(-1).cumulative), '03:30:00');
+  assert.equal(formatClock(negative.at(-1).cumulative), '03:30:00');
+
+  // The first half is given away and the second half takes it back.
+  assert.ok(negative[20].cumulative > even[20].cumulative, 'front half is slower');
+});
+
+test('negative split zero is identical to even pacing', () => {
+  const pace = paceFromTime(parseClock('3:30:00'), 42.2);
+  assert.deepEqual(splits(pace, 42.2, { negativeSplit: 0 }), splits(pace, 42.2));
+});
+
+test('splits reject a nonsensical split bias', () => {
+  const pace = paceFromTime(parseClock('3:30:00'), 42.2);
+  assert.deepEqual(splits(pace, 42.2, { negativeSplit: 1 }), []);
+  assert.deepEqual(splits(pace, 42.2, { negativeSplit: NaN }), []);
+});
