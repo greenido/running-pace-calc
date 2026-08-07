@@ -14,15 +14,18 @@ import {
   splits,
 } from './pace.js';
 
+import {
+  RACE_DISTANCES,
+  METERS_PER_MILE,
+  predictAll,
+  vdot,
+  trainingPaces,
+  perKmToPerMile,
+} from './predict.js';
+
 const el = (id) => document.getElementById(id);
 
 let lastMode = null;
-
-// marathon-food.html loads this script too. Without this guard the module
-// throws on any page that has no calculator markup.
-if (el('paceForm')) {
-  init();
-}
 
 function init() {
   restoreFromUrl();
@@ -31,7 +34,19 @@ function init() {
   const form = el('paceForm');
   form.addEventListener('input', onFormChange);
   form.addEventListener('change', onFormChange);
+  el('splitStrategy').addEventListener('change', render);
   el('shareBtn').addEventListener('click', share);
+  el('printBtn').addEventListener('click', () => {
+    // A collapsed <details> prints as nothing, and the splits are the whole
+    // point of the pace band.
+    selectTab('tab-calc');
+    el('splitsPanel').open = true;
+    window.print();
+  });
+
+  initTabs();
+  initPredictor();
+  registerServiceWorker();
 }
 
 function onFormChange(event) {
@@ -129,9 +144,15 @@ function render() {
 }
 
 function renderSplits(paceSeconds, distance, unit) {
-  const rows = splits(paceSeconds, distance);
+  const negativeSplit = Number(el('splitStrategy').value) || 0;
+  const rows = splits(paceSeconds, distance, { negativeSplit });
   const body = el('splitsBody');
+
   el('splitsSummary').textContent = `Splits (${rows.length} × ${unit})`;
+  el('splitsCaption').textContent =
+    negativeSplit > 0
+      ? `Negative split — back half ${(negativeSplit * 100).toFixed(0)}% faster`
+      : 'Even pace';
 
   body.replaceChildren(
     ...rows.map((row) => {
@@ -144,6 +165,125 @@ function renderSplits(paceSeconds, distance, unit) {
       return tr;
     }),
   );
+}
+
+//
+// Tabs
+//
+
+const TABS = [
+  { tab: 'tab-calc', panel: 'panel-calc' },
+  { tab: 'tab-predict', panel: 'panel-predict' },
+];
+
+function initTabs() {
+  for (const { tab } of TABS) {
+    el(tab).addEventListener('click', () => selectTab(tab));
+    el(tab).addEventListener('keydown', onTabKey);
+  }
+}
+
+function selectTab(activeId) {
+  for (const { tab, panel } of TABS) {
+    const isActive = tab === activeId;
+    el(tab).setAttribute('aria-selected', String(isActive));
+    el(tab).tabIndex = isActive ? 0 : -1;
+    el(panel).hidden = !isActive;
+  }
+  el(activeId).focus();
+}
+
+// Left/right arrows move between tabs, which is what a tablist is expected
+// to do once it has role="tablist" on it.
+function onTabKey(event) {
+  if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+  event.preventDefault();
+  const index = TABS.findIndex(({ tab }) => tab === event.currentTarget.id);
+  const step = event.key === 'ArrowRight' ? 1 : -1;
+  selectTab(TABS[(index + step + TABS.length) % TABS.length].tab);
+}
+
+//
+// Predict & train
+//
+
+function initPredictor() {
+  el('raceDistance').replaceChildren(
+    ...RACE_DISTANCES.map((race) => new Option(race.label, String(race.meters))),
+  );
+  el('raceDistance').value = String(
+    RACE_DISTANCES.find((race) => race.id === '10k').meters,
+  );
+
+  el('predictForm').addEventListener('input', renderPredictions);
+  el('predictForm').addEventListener('change', renderPredictions);
+  renderPredictions();
+}
+
+function renderPredictions() {
+  const meters = Number(el('raceDistance').value);
+  const seconds = parseClock(el('raceTime').value);
+  const unit = el('predictUnit').value;
+
+  // An unparseable time should say so rather than silently blanking the page.
+  const invalid = seconds === null || seconds <= 0;
+  el('predictError').hidden = !invalid;
+  if (invalid) {
+    el('predictBody').replaceChildren();
+    el('trainingBody').replaceChildren();
+    el('vdotValue').textContent = '';
+    return;
+  }
+
+  const perUnit = (secondsPerKm) =>
+    unit === 'mi' ? perKmToPerMile(secondsPerKm) : secondsPerKm;
+  const unitName = unit === 'mi' ? 'Mi' : 'Km';
+  const unitMeters = unit === 'mi' ? METERS_PER_MILE : 1000;
+
+  el('predictBody').replaceChildren(
+    ...predictAll(seconds, meters).map((race) => {
+      const tr = document.createElement('tr');
+      if (race.isSource) tr.className = 'is-source';
+      tr.append(
+        cell(race.isSource ? `${race.label} (your race)` : race.label),
+        cell(formatClock(race.seconds)),
+        cell(`${formatPace(race.seconds / (race.meters / unitMeters))} /${unitName}`),
+      );
+      return tr;
+    }),
+  );
+
+  const vdotValue = vdot(meters, seconds);
+  el('vdotValue').textContent = vdotValue ? `— VDOT ${vdotValue.toFixed(1)}` : '';
+
+  el('trainingBody').replaceChildren(
+    ...trainingPaces(vdotValue).map((zone) => {
+      const tr = document.createElement('tr');
+      tr.append(cell(zone.label), cell(`${formatPace(perUnit(zone.secondsPerKm))} /${unitName}`));
+      return tr;
+    }),
+  );
+}
+
+function cell(text) {
+  const td = document.createElement('td');
+  td.textContent = text;
+  return td;
+}
+
+//
+// Offline support
+//
+
+function registerServiceWorker() {
+  // Skipped on file:// and inside the packaged extension, where the scheme
+  // has no service worker to register against.
+  if (!('serviceWorker' in navigator)) return;
+  if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
+
+  navigator.serviceWorker.register('sw.js').catch(() => {
+    // Offline support is a bonus; the calculator works fine without it.
+  });
 }
 
 //
@@ -232,4 +372,14 @@ async function share() {
   setTimeout(() => {
     button.textContent = 'Copy link';
   }, 2000);
+}
+
+//
+// Entry point lives at the bottom so every const above it is initialised by
+// the time init() runs — a call at the top hits the temporal dead zone.
+//
+// The guard is for marathon-food.html, which has no calculator markup.
+//
+if (el('paceForm')) {
+  init();
 }

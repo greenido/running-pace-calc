@@ -404,3 +404,161 @@ input[type='range']:focus-visible,
   outline: 3px solid yellow;
   outline-offset: 2px;
 }
+
+/* Tabs
+***********************************/
+.tabs {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.tabs [role='tab'] {
+  background: transparent;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  color: #f7f7f7;
+  cursor: pointer;
+  font-size: 1.05rem;
+  padding: 10px 16px;
+}
+
+.tabs [role='tab'][aria-selected='true'] {
+  border-bottom-color: yellow;
+  color: yellow;
+  font-weight: 700;
+}
+
+.tabs [role='tab']:focus-visible {
+  outline: 3px solid yellow;
+  outline-offset: -3px;
+}
+
+/* Predict & train
+***********************************/
+#predictForm fieldset {
+  padding: 10px 15px;
+}
+
+#predictForm label {
+  display: inline-block;
+  margin-right: 18px;
+}
+
+#raceDistance,
+#raceTime,
+#predictUnit,
+#splitStrategy {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  color: #222;
+  font-size: 1rem;
+  padding: 3px 6px;
+}
+
+.hint {
+  color: #d7d7ee;
+  font-size: 0.9rem;
+  margin: 4px 0 10px;
+  max-width: 60ch;
+}
+
+#predictError {
+  color: #ffd0d0;
+  font-weight: 700;
+}
+
+.data-table {
+  margin-bottom: 1.4em;
+  max-width: 520px;
+  width: 100%;
+}
+
+.data-table th,
+.data-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 5px 8px;
+  text-align: left;
+}
+
+.data-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table tr.is-source td {
+  color: yellow;
+  font-weight: 700;
+}
+
+.strategy {
+  display: block;
+  margin: 8px 0;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#printBtn {
+  background: transparent;
+  border: 2px solid #ccc;
+  border-radius: 30px;
+  color: #f7f7f7;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 8px 18px;
+}
+
+#printBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Pace band
+***********************************/
+/* Printing is for one thing only: a strip of splits you can carry. Everything
+   that is not the splits table is dropped, and the colours are inverted so it
+   does not empty a print cartridge. */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  form,
+  footer,
+  hr,
+  .tabs,
+  .button-row,
+  .results-row,
+  .hint,
+  #panel-predict {
+    display: none !important;
+  }
+
+  .splits summary,
+  .strategy {
+    display: none;
+  }
+
+  .splits table {
+    font-size: 11pt;
+    max-width: none;
+    width: auto;
+  }
+
+  .splits th,
+  .splits td {
+    border-bottom: 1px solid #999;
+    padding: 2px 10px;
+  }
+
+  #splitsCaption {
+    font-weight: 700;
+    padding-bottom: 6px;
+    text-align: left;
+  }
+}
