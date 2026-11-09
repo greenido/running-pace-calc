@@ -65,6 +65,7 @@ const STRINGS = {
     'splits.negative': 'Negative split — back half {percent}% faster',
     'splits.distance': 'Distance',
     'splits.elapsed': 'Elapsed',
+    'splits.pace': 'Pace',
     'splits.finish': '{mark} {unit} (finish)',
 
     'predict.legend': 'A race you have actually run',
@@ -157,6 +158,7 @@ const STRINGS = {
     'splits.negative': 'ספליט שלילי — החצי השני מהיר ב-{percent}%',
     'splits.distance': 'מרחק',
     'splits.elapsed': 'זמן מצטבר',
+    'splits.pace': 'קצב',
     'splits.finish': '{mark} {unit} (סיום)',
 
     'predict.legend': 'מרוץ שכבר רצתם',

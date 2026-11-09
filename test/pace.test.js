@@ -79,6 +79,23 @@ test('splits produce a row per whole unit plus the final partial', () => {
   assert.equal(formatClock(last.cumulative), '03:30:00');
 });
 
+test('each split carries its own pace, the short final row included', () => {
+  const pace = paceFromTime(12600, 42.2);
+  const rows = splits(pace, 42.2);
+  for (const row of rows) assert.ok(Math.abs(row.pace - pace) < 1e-9, `row ${row.mark}`);
+  // The 0.2 km tail takes ~60s, but its pace is still per whole km.
+  assert.equal(formatPace(rows.at(-1).pace), formatPace(pace));
+});
+
+test('a negative split shows a slower front half and a faster back half', () => {
+  const pace = paceFromTime(parseClock('3:30:00'), 42.2);
+  const rows = splits(pace, 42.2, { negativeSplit: 0.04 });
+  assert.ok(rows[0].pace > pace, 'first km slower than average');
+  assert.ok(rows.at(-2).pace < pace, 'last whole km faster than average');
+  // Back-half pace is exactly 4% under front-half pace.
+  assert.ok(Math.abs(rows.at(-2).pace / rows[0].pace - 0.96) < 1e-9);
+});
+
 test('splits omit the partial row on a whole-number distance', () => {
   const rows = splits(paceFromTime(3600, 10), 10);
   assert.equal(rows.length, 10);

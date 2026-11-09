@@ -238,16 +238,15 @@ function renderSplits(paceSeconds, distance, unit) {
   el('splitsSummary').textContent = t('splits.summary', { count: rows.length, unit });
   el('splitsCaption').textContent = strategyLabel(negativeSplit);
 
+  const perUnitName = t('pace.per', { unit });
   body.replaceChildren(
     ...rows.map((row) => {
       const tr = document.createElement('tr');
-      const mark = document.createElement('td');
-      const time = document.createElement('td');
-      mark.textContent = row.partial
-        ? t('splits.finish', { mark: row.mark, unit })
-        : `${row.mark} ${unit}`;
-      time.textContent = formatClock(row.cumulative);
-      tr.append(mark, time);
+      tr.append(
+        cell(row.partial ? t('splits.finish', { mark: row.mark, unit }) : `${row.mark} ${unit}`),
+        cell(formatClock(row.cumulative)),
+        cell(`${formatPace(row.pace)} ${perUnitName}`),
+      );
       return tr;
     }),
   );

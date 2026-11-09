@@ -72,16 +72,23 @@ export function splits(secondsPerUnit, distance, { negativeSplit = 0 } = {}) {
 
   const elapsedAt = splitSchedule(secondsPerUnit, distance, negativeSplit);
 
+  // Each row's pace is the time since the previous mark over the distance
+  // covered, so the short final row is not reported as a full unit's pace.
   const rows = [];
+  let prevMark = 0;
+  let prevElapsed = 0;
+  const push = (mark, at, partial) => {
+    const cumulative = elapsedAt(at);
+    rows.push({ mark, cumulative, pace: (cumulative - prevElapsed) / (at - prevMark), partial });
+    prevMark = at;
+    prevElapsed = cumulative;
+  };
+
   const whole = Math.floor(distance);
-  for (let mark = 1; mark <= whole; mark++) {
-    rows.push({ mark, cumulative: elapsedAt(mark), partial: false });
-  }
+  for (let mark = 1; mark <= whole; mark++) push(mark, mark, false);
 
   // Guard against float noise: 42.2 - 42 is 0.19999999999999574.
-  if (distance - whole > 0.001) {
-    rows.push({ mark: round1(distance), cumulative: elapsedAt(distance), partial: true });
-  }
+  if (distance - whole > 0.001) push(round1(distance), distance, true);
   return rows;
 }
 
