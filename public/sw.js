@@ -3,7 +3,7 @@
 // with no signal, so everything it needs is cached up front.
 //
 
-const CACHE = 'pace-calc-v3';
+const CACHE = 'pace-calc-v4';
 
 const SHELL = [
   './',
@@ -15,6 +15,7 @@ const SHELL = [
   'js/main.js',
   'js/pace.js',
   'js/predict.js',
+  'js/i18n.js',
   'assets/favicon.png',
   'assets/apple-touch-icon.png',
   'assets/icon-192.png',

@@ -59,410 +59,114 @@ table {
   --accent: #ffd166;
   --accent-hover: #ffdf94;
   --accent-ink: #1a1400;
+
+  --tap: 44px;
+  --gutter: 16px;
+}
+
+/* Base
+***********************************/
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: arial;
+  /* System faces carry good Hebrew glyphs; plain Arial falls back unevenly. */
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, 'Noto Sans Hebrew', sans-serif;
   font-size: 1em;
+  line-height: 1.4;
+  -webkit-tap-highlight-color: transparent;
 }
+
+button,
+select,
+input,
+label,
+summary {
+  touch-action: manipulation;
+}
+
 h1 {
-  font-size: 1.8rem;
+  align-items: center;
+  display: flex;
+  font-size: clamp(1.35rem, 5.5vw, 1.8rem);
   font-weight: 600;
-  margin: 0 0 10px 0;
+  gap: 8px;
+  line-height: 1.2;
+  margin: 0;
 }
 h2 {
   font-size: 1.6rem;
   font-weight: 100;
-  /* text-transform: uppercase; 
-  */
-}
-.slider-wrapper label {
-  display: block;
-  margin:10px auto;
-
-}
-#distanceRadioFields {
-  padding: 10px 15px 20px;
-}
-/* Keep each radio glued to its own label — without this the text wraps
-   mid-label on narrow screens and "42.2" ends up on a different line to "Km". */
-#distanceRadioFields label,
-#unitRadioFields label {
-  align-items: center;
-  display: inline-flex;
-  font-size: 1.1rem;
-  gap: 6px;
-  margin-right: 14px;
-  white-space: nowrap;
 }
 
-/* The mode options are sentences, so they get a line each and are allowed
-   to wrap rather than pushing the fieldset off-screen. */
-#modeRadioFields label {
-  align-items: center;
-  display: flex;
-  font-size: 1.1rem;
-  gap: 6px;
-}
-.output {
-  border: 2px solid var(--border-strong);
-  border-radius:30px;
-  display: inline-block;
-  font-size: 2.0rem;
-  padding: 10px 20px;
-}
-
-.container{
+.container {
   padding: 10px 0;
 }
-.wrapper{
+.wrapper {
   margin: 0 auto;
-  max-width: 95%;
-}
-.row {
-  margin: 10px 0 0 0;
-}
-.results-row {
-  align-items: center;
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 8px;
-  justify-content: space-between;
+  max-width: 760px;
+  padding-inline: var(--gutter);
 }
 
-.result-item {
-  align-items: center;
+/* Header + language switch
+***********************************/
+.topbar {
   display: flex;
-  flex: 1 1 0;
+  flex-direction: column;
   gap: 6px;
-  min-width: 0;
+  margin-bottom: 12px;
 }
 
-.results-row h2 {
-  flex: 0 0 auto;
-  font-size: clamp(0.9rem, 2.8vw, 1.2rem);
-  font-weight: 600;
-  margin: 0;
-  white-space: nowrap;
-}
-
-.results-row .output {
-  box-sizing: border-box;
-  display: block;
-  flex: 1 1 auto;
-  font-size: clamp(0.9rem, 2.8vw, 1.25rem);
-  margin: 0;
-  min-width: 0;
-  padding: 6px 8px;
-  text-align: center;
-  white-space: nowrap;
-}
-
-/* Whichever card is the answer (rather than the input) gets the emphasis. */
-.result-item.is-result .output {
-  border-color: var(--accent);
-  color: var(--accent);
-  font-weight: 700;
-}
-
-/* Side by side, a zero-padded "03:30:00" clips against its own border on a
-   phone, so give each card the full width instead. */
-@media (max-width: 480px) {
-  .results-row {
-    align-items: stretch;
-    flex-direction: column;
-  }
-}
-
-/*INPUT SLIDERS
-***********************************/
-input[type=range] {
-  -webkit-appearance: none;
-  width: 100%;
-  margin: 8.35px 0;
-}
-input[type=range]:focus {
-  outline: none;
-}
-input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 23.3px;
-  cursor: pointer;
-  
-  background: var(--surface-raised);
-  border-radius: 1.3px;
+/* The pill sits on its own row so the title never has to squeeze beside it on
+   a phone. It stays top-right with EN first in both languages: if it followed
+   the page direction it would jump out from under the thumb that tapped it. */
+.lang-switch {
+  align-self: flex-end;
+  direction: ltr;
+  background: var(--surface);
   border: 1px solid var(--border);
+  border-radius: 999px;
+  display: inline-flex;
+  padding: 3px;
 }
-input[type=range]::-webkit-slider-thumb {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  border: 2px solid var(--border-strong);
-  height: 40px;
-  width: 24px;
-  border-radius: 50px;
-  background: var(--accent);
-  cursor: pointer;
-  -webkit-appearance: none;
-  margin-top: -8.55px;
+
+[dir='rtl'] .lang-switch {
+  align-self: flex-start;
 }
-input[type=range]:focus::-webkit-slider-runnable-track {
-  background: var(--border);
-}
-input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 23.3px;
-  cursor: pointer;
-   border: 2px solid var(--border-strong);
-  background: var(--surface-raised);
-  
-}
-input[type=range]::-moz-range-thumb {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  border: 2px solid var(--border-strong);
-  height: 40px;
-  width: 24px;
-  border-radius: 50px;
-  background: var(--accent);
-  cursor: pointer;
-}
-input[type=range]::-ms-track {
-  width: 100%;
-  height: 23.3px;
-  cursor: pointer;
+
+.lang-switch button {
+  align-items: center;
   background: transparent;
-  border-color: transparent;
-  color: transparent;
-}
-input[type=range]::-ms-fill-lower {
-  background: var(--accent);
-  border: 1px solid var(--border);
-  border-radius: 2.6px;
-  
-}
-input[type=range]::-ms-fill-upper {
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: 2.6px;
-  
-}
-input[type=range]::-ms-thumb {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  border: 2px solid var(--border-strong);
-  height: 40px;
-  width: 24px;
-  border-radius: 50px;
-  background: var(--accent);
-  cursor: pointer;
-  height: 23.3px;
-}
-input[type=range]:focus::-ms-fill-lower {
-  background: var(--surface-raised);
-}
-input[type=range]:focus::-ms-fill-upper {
-  background: var(--border);
-}
-
-/*radio buttons*/
-/* Checked and unchecked used to differ only by a small grey tick on the same
-   pale circle, which is nearly invisible at a glance. Selection is now a solid
-   accent fill. */
-.form-radio
-{
-     -webkit-appearance: none;
-     -moz-appearance: none;
-     appearance: none;
-     display: inline-block;
-     position: relative;
-     background-color: var(--surface-raised);
-     border: 2px solid var(--border-strong);
-     color: var(--accent-ink);
-     top: 10px;
-     height: 28px;
-     width: 28px;
-     border-radius: 50px;
-     cursor: pointer;
-     margin-right: 7px;
-     outline: none;
-}
-.form-radio:checked::before
-{
-     position: absolute;
-     font: 700 15px/1 'Open Sans', sans-serif;
-     left: 8px;
-     top: 4px;
-     content: '\02143';
-     transform: rotate(40deg);
-}
-.form-radio:hover
-{
-     border-color: var(--accent);
-}
-.form-radio:checked
-{
-     background-color: var(--accent);
-     border-color: var(--accent);
-}
-label {
-     /* 300 weight optically thins out badly as light text on a dark field. */
-     font: 400 16px/1.7 'Open Sans', sans-serif;
-     color: var(--text);
-     cursor: pointer;
-}
-
-.sliders-div {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin: 1em 2px;
-}
-
-.result-item.is-result h2 {
-  color: var(--accent);
-}
-
-footer {
-  color: var(--text);
-}
-footer a {
-  color: var(--accent);
-}
-
-#otherlinks {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  color: var(--text);
-  padding: 1em;
-}
-
-/* Marathon nutrition page styles */
-.container h2,
-.container h3 {
-  padding: 0.8em;
-}
-
-/* This used to be `background: red`, which put default blue link text on a
-   red field — the worst pairing on the page. */
-.container a {
-  color: var(--accent);
-  text-underline-offset: 3px;
-}
-/* Mode / unit / distance fieldsets
-***********************************/
-fieldset {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-legend {
+  border: 0;
+  border-radius: 999px;
   color: var(--text-muted);
-  font-size: 0.9rem;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-
-#modeRadioFields,
-#unitRadioFields {
-  margin-bottom: 10px;
-  padding: 10px 15px;
-}
-
-/* Without an explicit colour this inherits the white `label` colour and
-   renders white-on-white. */
-.custom-distance #customDistance {
-  background: #fff;
-  border: 1px solid var(--border-strong);
-  border-radius: 6px;
-  color: #222;
-  padding: 2px 6px;
-  width: 5.5em;
-}
-
-/* Slider rows
-***********************************/
-.slider-row[hidden] {
-  display: none;
-}
-
-.slider-row output {
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-}
-
-/* Buttons
-***********************************/
-/* Transparent buttons with a faint hairline read as text, not as something you
-   can press. Both get a filled surface; the primary action gets the accent. */
-#shareBtn,
-#printBtn {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-strong);
-  border-radius: 30px;
-  color: var(--text);
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 9px 20px;
+  display: inline-flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  gap: 6px;
+  min-height: 36px;
+  padding: 4px 12px;
 }
 
-#shareBtn {
+.lang-switch button:hover {
+  color: var(--text);
+}
+
+.lang-switch button[aria-pressed='true'] {
   background: var(--accent);
-  border-color: var(--accent);
   color: var(--accent-ink);
 }
 
-#shareBtn:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-}
-
-#printBtn:hover {
-  background: var(--border);
-  border-color: var(--border-strong);
-}
-
-/* Splits
-***********************************/
-.splits {
-  margin: 1em 0;
-}
-
-.splits summary {
-  cursor: pointer;
-  font-size: 1.1rem;
-  padding: 6px 0;
-}
-
-.splits table {
-  margin-top: 8px;
-  max-width: 420px;
-  width: 100%;
-}
-
-.splits th,
-.splits td {
-  border-bottom: 1px solid var(--border);
-  padding: 4px 8px;
-  text-align: left;
-}
-
-.splits td {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Focus visibility
-***********************************/
-/* Both the range inputs and the custom radios set `outline: none` with no
-   replacement, which leaves keyboard users with no idea where they are. */
-.form-radio:focus-visible,
-input[type='range']:focus-visible,
-#customDistance:focus-visible,
-#shareBtn:focus-visible,
-.splits summary:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 2px;
+.lang-switch .flag {
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  display: block;
+  height: 14px;
+  width: 21px;
 }
 
 /* Tabs
@@ -483,6 +187,7 @@ input[type='range']:focus-visible,
   cursor: pointer;
   font-size: 1.05rem;
   font-weight: 600;
+  min-height: var(--tap);
   padding: 10px 18px;
 }
 
@@ -500,20 +205,424 @@ input[type='range']:focus-visible,
   color: var(--text);
 }
 
-.tabs [role='tab']:focus-visible {
+/* Fieldsets
+***********************************/
+fieldset {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 0 0 12px;
+  padding: 10px 12px 12px;
+}
+
+legend {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  padding: 0 4px;
+  text-transform: uppercase;
+}
+
+label {
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 400;
+}
+
+/* Chips: mode, unit and distance
+***********************************/
+/* Big pressable tiles instead of 28px radio circles — the whole tile is the
+   target, which is what a thumb on a moving train needs. The real radio stays
+   in the DOM (and in the tab order) for keyboards and screen readers. */
+.segmented,
+.chip-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.segmented {
+  grid-template-columns: 1fr 1fr;
+}
+
+.chip-grid {
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+}
+
+.chip {
+  align-items: center;
+  background: var(--surface-raised);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+  line-height: 1.25;
+  min-height: var(--tap);
+  padding: 8px 6px;
+  position: relative;
+  text-align: center;
+  transition: border-color 0.12s, background-color 0.12s;
+}
+
+.chip:hover {
+  border-color: var(--border-strong);
+}
+
+.chip-input {
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.chip:has(.chip-input:checked) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+.chip:has(.chip-input:focus-visible) {
   outline: 3px solid var(--accent);
-  outline-offset: -3px;
+  outline-offset: 2px;
+}
+
+.chip-name {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.distance-label {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* The custom tile holds a number field, so it gets a full row. */
+.chip-custom {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  grid-column: 1 / -1;
+}
+
+.chip-custom .chip-name {
+  font-size: 1rem;
+  opacity: 1;
+}
+
+.custom-field {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+}
+
+/* Without an explicit colour this inherits the label colour and renders
+   white-on-white. 16px stops iOS zooming the page on focus. */
+#customDistance {
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: #222;
+  font-size: 16px;
+  min-height: 36px;
+  padding: 2px 8px;
+  width: 6em;
+}
+
+/* Sliders
+***********************************/
+.sliders-div {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px 12px 10px;
+}
+
+.slider-row + .slider-row {
+  border-top: 1px solid var(--border);
+}
+
+.slider-row[hidden] {
+  display: none;
+}
+
+.slider-head {
+  align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 6px;
+}
+
+.slider-head output {
+  font-size: 1.3rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.slider-control {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.step {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  color: var(--text);
+  cursor: pointer;
+  flex: 0 0 var(--tap);
+  font-size: 1.4rem;
+  font-weight: 700;
+  height: var(--tap);
+  line-height: 1;
+  padding: 0;
+  user-select: none;
+}
+
+.step:hover {
+  border-color: var(--accent);
+}
+
+.step:active {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  flex: 1 1 auto;
+  height: 44px;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  height: 14px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: var(--accent);
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  height: 32px;
+  margin-top: -10px;
+  width: 32px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: var(--border);
+}
+input[type=range]::-moz-range-track {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  height: 14px;
+}
+input[type=range]::-moz-range-thumb {
+  background: var(--accent);
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  height: 28px;
+  width: 28px;
+}
+
+/* Results
+***********************************/
+/* Pinned to the bottom of the viewport while the form above it is scrolled,
+   then settles into place — the answer is always on screen. */
+.results-row {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  bottom: 0;
+  box-shadow: 0 -8px 16px rgba(5, 10, 30, 0.6);
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  margin: 12px calc(-1 * var(--gutter)) 0;
+  padding: 8px var(--gutter) calc(8px + env(safe-area-inset-bottom));
+  position: sticky;
+  z-index: 5;
+}
+
+.result-item {
+  align-items: center;
+  background: var(--surface);
+  border: 2px solid var(--border-strong);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 6px 8px;
+}
+
+.results-row h2 {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.output {
+  font-size: clamp(1.3rem, 6.5vw, 2rem);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.output .unit {
+  font-size: 0.55em;
+  font-weight: 600;
+}
+
+/* Whichever card is the answer (rather than the input) gets the emphasis. */
+.result-item.is-result {
+  border-color: var(--accent);
+}
+.result-item.is-result h2,
+.result-item.is-result .output {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Buttons
+***********************************/
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Transparent buttons with a faint hairline read as text, not as something you
+   can press. Both get a filled surface; the primary action gets the accent. */
+#shareBtn,
+#printBtn {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text);
+  cursor: pointer;
+  flex: 1 1 10rem;
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: var(--tap);
+  padding: 9px 20px;
+}
+
+#shareBtn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+#shareBtn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+#printBtn:hover {
+  background: var(--border);
+}
+
+/* Splits
+***********************************/
+.splits {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 12px 0;
+  padding: 0 12px;
+}
+
+.splits summary {
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  min-height: var(--tap);
+  padding: 10px 0;
+}
+
+.strategy {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 8px;
+}
+
+.splits table {
+  margin: 8px 0 12px;
+  width: 100%;
+}
+
+.splits caption {
+  color: var(--text-muted);
+  padding-bottom: 4px;
+  text-align: start;
+}
+
+/* Tables
+***********************************/
+.splits th,
+.splits td,
+.data-table th,
+.data-table td {
+  border-bottom: 1px solid var(--border);
+  padding: 7px 8px;
+  text-align: start;
+}
+
+.splits td,
+.data-table td {
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table {
+  margin-bottom: 1.4em;
+  width: 100%;
+}
+
+.data-table tr.is-source td {
+  color: var(--accent);
+  font-weight: 700;
 }
 
 /* Predict & train
 ***********************************/
-#predictForm fieldset {
-  padding: 10px 15px;
+.field-grid {
+  display: grid;
+  gap: 10px 16px;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 }
 
-#predictForm label {
-  display: inline-block;
-  margin-right: 18px;
+.field-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  gap: 4px;
 }
 
 #raceDistance,
@@ -522,10 +631,22 @@ input[type='range']:focus-visible,
 #splitStrategy {
   background: #fff;
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
+  border-radius: 8px;
   color: #222;
-  font-size: 1rem;
-  padding: 3px 6px;
+  font-size: 16px;
+  min-height: var(--tap);
+  padding: 4px 8px;
+}
+
+#splitStrategy {
+  flex: 1 1 14rem;
+  max-width: 100%;
+}
+
+#panel-predict h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 1.2em 0 0.2em;
 }
 
 .hint {
@@ -540,37 +661,108 @@ input[type='range']:focus-visible,
   font-weight: 700;
 }
 
-.data-table {
-  margin-bottom: 1.4em;
-  max-width: 520px;
-  width: 100%;
+/* Footer and the nutrition page
+***********************************/
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0 1em;
 }
 
-.data-table th,
-.data-table td {
-  border-bottom: 1px solid var(--border);
-  padding: 5px 8px;
-  text-align: left;
+footer {
+  color: var(--text);
+  margin: 0 auto;
+  max-width: 760px;
+  padding: 0 var(--gutter) calc(1em + env(safe-area-inset-bottom));
 }
-
-.data-table td {
-  font-variant-numeric: tabular-nums;
-}
-
-.data-table tr.is-source td {
+footer a {
   color: var(--accent);
-  font-weight: 700;
 }
 
-.strategy {
-  display: block;
-  margin: 8px 0;
+#otherlinks {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
+  padding: 1em;
 }
 
-.button-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.article {
+  line-height: 1.6;
+}
+.article p,
+.article li {
+  margin-bottom: 0.7em;
+}
+.article ul {
+  list-style: disc;
+  padding-inline-start: 1.4em;
+}
+.article h2,
+.article h3 {
+  font-weight: 600;
+  padding: 0.8em 0 0.3em;
+}
+.article h2 {
+  font-size: 1.4rem;
+}
+.article h3 {
+  font-size: 1.15rem;
+}
+
+/* This used to be `background: red`, which put default blue link text on a
+   red field — the worst pairing on the page. */
+.container a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+/* Focus visibility
+***********************************/
+input[type='range']:focus-visible,
+#customDistance:focus-visible,
+#shareBtn:focus-visible,
+#printBtn:focus-visible,
+.step:focus-visible,
+.lang-switch button:focus-visible,
+.splits summary:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tabs [role='tab']:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+/* Phones
+***********************************/
+@media (max-width: 600px) {
+  :root {
+    --gutter: 12px;
+  }
+
+  .tabs [role='tab'] {
+    flex: 1 1 0;
+    padding: 10px 8px;
+  }
+
+  .chip-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .segmented .chip {
+    font-size: 0.95rem;
+  }
+
+  #panel-predict h2 {
+    font-size: 1.15rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 7px 4px;
+  }
 }
 
 /* Pace band
@@ -587,12 +779,18 @@ input[type='range']:focus-visible,
   form,
   footer,
   hr,
+  .topbar,
   .tabs,
   .button-row,
   .results-row,
   .hint,
   #panel-predict {
     display: none !important;
+  }
+
+  .splits {
+    background: none;
+    border: 0;
   }
 
   .splits summary,
@@ -602,19 +800,19 @@ input[type='range']:focus-visible,
 
   .splits table {
     font-size: 11pt;
-    max-width: none;
     width: auto;
   }
 
   .splits th,
   .splits td {
     border-bottom: 1px solid #999;
+    color: #000;
     padding: 2px 10px;
   }
 
   #splitsCaption {
+    color: #000;
     font-weight: 700;
     padding-bottom: 6px;
-    text-align: left;
   }
 }

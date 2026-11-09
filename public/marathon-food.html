@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
-    <title>Running Pace Calculator</title>
+    <title>Marathon Nutrition</title>
 
     <meta
       name="description"
@@ -12,23 +12,71 @@
       name="author"
       content="Ido Green | greenido.wordpress.com | @greenido"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
 
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="assets/favicon.png" type="image/png" />
 
     <link rel="manifest" href="manifest.webmanifest" />
-    <meta name="theme-color" content="#26268c" />
+    <meta name="theme-color" content="#101a3d" />
 
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/main.css" />
   </head>
-  <body>
+  <body data-title-key="food.title">
     <div class="container">
       <div class="wrapper">
-        <h1>🏃🏼‍♀️ Marathon Nutrition</h1>
-        <p><a href="index.html">← Back to the pace calculator</a></p>
-        <div><p>Nutrition continues to be a much discussed topic amongst marathon runners. Questions about what to eat before, during, and after the race are commonly asked by beginners and even advanced runners. Here is a quick guide to getting your nutrition for your marathon just right.</p>
+        <header class="topbar">
+          <div
+            class="lang-switch"
+            role="group"
+            aria-label="Language"
+            data-i18n-aria="lang.label"
+          >
+            <button type="button" data-lang="en" lang="en" aria-pressed="true">
+              <svg class="flag" viewBox="0 0 30 20" aria-hidden="true">
+                <rect width="30" height="20" fill="#fff" />
+                <path
+                  fill="#b22234"
+                  d="M0 0h30v1.54H0zM0 3.08h30v1.54H0zM0 6.15h30v1.54H0zM0 9.23h30v1.54H0zM0 12.31h30v1.54H0zM0 15.38h30v1.54H0zM0 18.46h30V20H0z"
+                />
+                <rect width="13" height="10.77" fill="#3c3b6e" />
+                <g fill="#fff">
+                  <circle cx="2.2" cy="2" r=".6" /><circle cx="5.4" cy="2" r=".6" />
+                  <circle cx="8.6" cy="2" r=".6" /><circle cx="11" cy="2" r=".6" />
+                  <circle cx="3.8" cy="4.4" r=".6" /><circle cx="7" cy="4.4" r=".6" />
+                  <circle cx="10.2" cy="4.4" r=".6" /><circle cx="2.2" cy="6.8" r=".6" />
+                  <circle cx="5.4" cy="6.8" r=".6" /><circle cx="8.6" cy="6.8" r=".6" />
+                  <circle cx="11" cy="6.8" r=".6" /><circle cx="3.8" cy="9" r=".6" />
+                  <circle cx="7" cy="9" r=".6" /><circle cx="10.2" cy="9" r=".6" />
+                </g>
+              </svg>
+              <span>EN</span>
+            </button>
+            <button type="button" data-lang="he" lang="he" aria-pressed="false">
+              <svg class="flag" viewBox="0 0 30 20" aria-hidden="true">
+                <rect width="30" height="20" fill="#fff" />
+                <path fill="#0038b8" d="M0 2h30v3H0zM0 15h30v3H0z" />
+                <g fill="none" stroke="#0038b8" stroke-width=".9">
+                  <path d="M15 6.2l3.3 5.7h-6.6z" />
+                  <path d="M15 13.8l3.3-5.7h-6.6z" />
+                </g>
+              </svg>
+              <span>עב</span>
+            </button>
+          </div>
+          <h1>
+            <span aria-hidden="true">🏃🏼‍♀️</span>
+            <span data-i18n="food.title">Marathon Nutrition</span>
+          </h1>
+        </header>
+        <p><a href="index.html" data-i18n="food.back">← Back to the pace calculator</a></p>
+
+        <article class="article" lang="en" dir="ltr" data-lang-block="en">
+<p>Nutrition continues to be a much discussed topic amongst marathon runners. Questions about what to eat before, during, and after the race are commonly asked by beginners and even advanced runners. Here is a quick guide to getting your nutrition for your marathon just right.</p>
 <p>Interestingly, the story does not start in the week before the race, like training it starts many weeks before the event! After a race it also seems to be one of the main topics, especially for runners who did not achieve their goals or had problems along the way.</p>
 <p>Training and nutrition are the two of the most important factors determining performance on race day. Most runners spend many hours per week training, planning, and preparing their training sessions… but how much time is spent on nutrition? Often, nutrition is taken for granted and this could jeopardize all the hours and days of hard training.</p>
 <h2>The Early Preparation</h2>
@@ -101,31 +149,124 @@
 <li>Don’t overdrink, don’t under drink. Try to match our sweat loss or a little less. Some weight loss at the end (2% of your body weight is fine).</li>
 <li>Don’t use excessive salt or electrolyte intake.</li>
 </ul>
-</div>
-      
-      </div> 
-      
-      
-    <!--   The footer and other stuff     -->
+        </article>
+
+        <article class="article" lang="he" dir="rtl" data-lang-block="he" hidden>
+<p>תזונה היא עדיין אחד הנושאים המדוברים ביותר בקרב רצי מרתון. מה לאכול לפני המרוץ, במהלכו ואחריו — שאלות ששואלים גם מתחילים וגם רצים מנוסים. הנה מדריך קצר שיעזור לכם לדייק את התזונה למרתון הבא.</p>
+<p>מעניין לגלות שהסיפור לא מתחיל בשבוע שלפני המרוץ: בדיוק כמו האימונים, הוא מתחיל שבועות רבים לפני האירוע! גם אחרי המרוץ זה אחד הנושאים המרכזיים, במיוחד אצל רצים שלא השיגו את המטרות שלהם או שנתקלו בבעיות בדרך.</p>
+<p>אימון ותזונה הם שניים מהגורמים החשובים ביותר לביצועים ביום המרוץ. רוב הרצים משקיעים שעות רבות בשבוע באימונים, בתכנון ובהכנה… אבל כמה זמן מוקדש לתזונה? פעמים רבות מתייחסים אליה כמובנת מאליה, וזה עלול לסכן את כל השעות והימים של אימון קשה.</p>
+<h2>ההכנה המוקדמת</h2>
+<p>ההכנה מתחילה שבועות רבים לפני האירוע. כדאי להכיר את הבסיס: איזו תזונה תחולק לאורך המסלול, איפה נמצאות תחנות ההזנה ומה צפוי להיות מזג האוויר. על מזג האוויר אי אפשר להשפיע, אבל אפשר להתכונן אליו. חשוב גם לברר מה יחולק במסלול, כדי להתאמן עם אותם מוצרים ולוודא שהגוף סובל אותם ומסתגל אליהם. אם לא — עדיף לגלות את זה שבועות מראש ולא ביום המרוץ.</p>
+<h2>התאמנו על תוכנית המרוץ</h2>
+<p>השלב הראשון הוא למצוא איזו תזונה עובדת הכי טוב בשבילכם — לא רק אילו מוצרים, אלא גם התזמון. התחילו בכך כעשרה שבועות לפני האירוע: השתמשו בריצות הארוכות כדי לתרגל את התוכנית, או כדי לבנות אותה בהדרגה. כאמור, נסו קודם את המוצרים שיחולקו במסלול. אם הם לא מתאימים לכם, התחילו להתנסות במוצרים אחרים.</p>
+<h2>העמסת פחמימות</h2>
+<p>בימים שלפני המרוץ כדאי לוודא שמאגרי הדלק (גליקוגן בשריר) מלאים. פעם נהגו בשיטות העמסה קיצוניות: ימים בלי פחמימות, ימים של פחמימות בכמות קיצונית, ריצת דלדול שבוע לפני וכן הלאה. אין בזה צורך. אפשר להגיע לרמות גליקוגן גבוהות מאוד פשוט על ידי אכילת יותר <a href="http://home.trainingpeaks.com/blog/article/why-athletes-need-carbohydrates">פחמימות</a>.</p>
+<p>לאכול יותר פחמימות לא אומר לאכול יותר מדי או כמה שיותר! הכוונה היא שחלק גדול יותר מהקלוריות היומיות יגיע מפחמימות, על חשבון מעט שומן. מומלץ לאכול את הארוחה הגדולה האחרונה בצהריים של היום שלפני, ובערב ארוחה קלה יותר. גם את זה כדאי לתרגל בשבועות שלפני, או לקראת מרוץ קטן יותר. אם אתם סובלים לעיתים קרובות מבעיות במערכת העיכול, הפחיתו סיבים תזונתיים למינימום ביום שלפני המרוץ.</p>
+<p>מבחינה מעשית, צריך גם לתכנן מראש — במיוחד אם אתם בנסיעה. הזמינו מקום במסעדה שאתם יודעים שהאוכל בה טוב. אל תאלתרו ברגע האחרון ותגיעו למזנון מזון מהיר או לתור של שעות. לרגליים יהיה מספיק עבודה למחרת.</p>
+<h2>ארוחת הבוקר לפני המרוץ</h2>
+<p>ארוחת הבוקר חשובה כי היא ממלאת מחדש את מאגרי הגליקוגן בכבד. פחמימות נאגרות בכבד, אבל במהלך הלילה המוח צורך אותן, כך שבבוקר לא נשאר הרבה. מכיוון שארוחה כזו דוחה את רגע ה"קיר", חשוב לאכול ארוחת בוקר עשירה בפחמימות. וגם כאן — אם אתם סובלים מבעיות עיכול, הפחיתו סיבים תזונתיים.</p>
+<p>מה בדיוק לאכול תלוי בהעדפה אישית. יש מי שרץ מצוין אחרי כמה בייגלים וקפה, יש מי שמעדיף דייסת שיבולת שועל, וופלים עם סירופ, כמה חטיפי אנרגיה או קערית אורז. מה שלא תבחרו, ההמלצה היא לפחות 100 גרם פחמימות, ולאכול בדיוק את אותה ארוחה ובאותו תזמון לפני אימונים קשים ומרוצים קטנים.</p>
+<p>התזמון הטוב ביותר הוא כנראה 3 עד 4 שעות לפני הזינוק. אם אינכם סובלים מבעיות עיכול, גם 2 עד 3 שעות לפני עשויות להתאים. בדקו את צבע השתן: אם הוא בהיר — אתם בסדר; אם הוא כהה — המשיכו לשתות עוד קצת. אין צורך להגזים בנוזלים, אבל לא כדאי להתחיל עם שתן כהה.</p>
+<h2>השעה שלפני הזינוק</h2>
+<p>את השעה שלפני בדרך כלל מעבירים בהמתנה מתוחה. הקפידו להביא בקבוק מים ללגימות, וג׳ל לקחת ב-15 הדקות שלפני הזינוק. תרגלו את זה כמה פעמים באימונים. כל מה שתצרכו בדקות שלפני הזינוק יהיה זמין במהלך הריצה, כי לוקח קצת זמן עד שהוא נספג. לכן אני נוהג לספור את מה שנלקח בחלון הזה כחלק מצריכת הפחמימות במהלך המרוץ.</p>
+<h2>במהלך המרוץ</h2>
+<p>במהלך המרוץ שני דברים חשובים: פחמימות ונוזלים. בשניהם חשוב לקחת מספיק, אבל לא יותר מדי. עודף נוזלים או פחמימות עלול לגרום לבעיות בקיבה. שתייה מרובה שמובילה לעלייה במשקל בהחלט אינה מומלצת, ועלולה אף לגרום להיפונתרמיה — מצב שעלול לסכן את הבריאות.</p>
+<h3>נוזלים</h3>
+<p>הדרך היחידה להבין באמת את <a href="http://home.trainingpeaks.com/blog/article/the-basics-of-exercise-nutrition">קצב ההזעה</a> שלכם וכמה צריך לשתות היא לשקול את עצמכם לפני ואחרי אימונים בשבועות שלפני המרתון. כך אפשר לחשב את קצב ההזעה: מחסירים את המשקל שאחרי מהמשקל שלפני, ומוסיפים את כמות הנוזלים ששתיתם. יש ברשת מחשבוני הזעה שונים שיעזרו בחישוב.</p>
+<p>אם אתם רצים בתנאים דומים ובקצב דומה לזה של המרתון עצמו, קצב ההזעה יהיה דומה. הכוסות שמחלקים במרתון מכילות בדרך כלל כ-150 מ״ל, ומהן שותים בפועל כ-100 מ״ל. כדי למנוע התייבשות צריך לשתות כמות שקרובה לקצב ההזעה. הקיבה של רץ יכולה לרוקן כ-180 עד 210 מ״ל נוזלים כל 15 דקות של ריצה — כלומר כ-720 עד 840 מ״ל בשעה. את זה אפשר לאמן, לתרגל ולשפר במידת הצורך.</p>
+<h3>פחמימות</h3>
+<p>צורכי הפחמימות פשוטים יותר. מחקרים מראים שאפשר לנצל כ-60 גרם פחמימות בשעה מרוב המקורות. כדאי לכוון ל-30 עד 60 גרם בשעה. מי שמסיים בטווח של 4 עד 5 שעות יסתדר בקצה הנמוך של הטווח; מי שמכוון לסיום של 3 שעות ירוויח יותר מהקצה הגבוה. מחקרים עדכניים מצביעים גם על קשר בין מינון לתגובה — כלומר, יותר פחמימות עשויות לשפר ביצועים. אבל כמובן שעודף עלול לגרום לבעיות עיכול ולהשיג את ההפך. זה הופך לאיזון עדין, שבו "תחושת הבטן" היא המדד.</p>
+<p>מקורות פחמימות</p>
+<ul>
+<li>בננה אחת 24-30 גרם</li>
+<li>ג׳ל 21-27 גרם</li>
+<li>חטיף אנרגיה 20-40 גרם</li>
+<li>4-5 סוכריות גומי אנרגיה 16-25 גרם</li>
+<li>10 סוכריות ג׳לי 11 גרם</li>
+</ul>
+<p>החדשות הטובות הן שמערכת העיכול ניתנת לאימון במידה רבה: אפשר ללמד אותה לסבול משקאות, ג׳לים, חטיפים וכדומה — ולשם כך צריך להשתמש בהם באימונים באופן קבוע. אז התאמנו עם כל המוצרים שתשתמשו בהם במרוץ!</p>
+<p>והימנעו מניסויים במוצרים חדשים ביום המרוץ. יש גם צד שני למטבע: ספורטאים שאינם צורכים פחמימות באופן קבוע, מנסים לרדת במשקל, נמצאים בדיאטה עתירת שומן וכדומה, יתקשו יותר לספוג פחמימות וסביר יותר שיסבלו מבעיות עיכול במהלך המאמץ.</p>
+<p><a href="http://home.trainingpeaks.com/blog/article/how-to-stay-hydrated-when-training-and-racing-in-the-heat">אלקטרוליטים</a> (נתרן) עשויים לסייע בספיגה, ולכן מומלץ מעט נתרן במשקאות או בג׳לים — אבל בלי להגזים! מרתון קצר מכדי לגרום לאובדן נתרן קיצוני שישפיע על הביצועים או על הבריאות.</p>
+<p><a href="http://home.trainingpeaks.com/blog/article/the-benefits-of-caffeine-for-endurance-athletes">ספורטאים רבים משתמשים בקפאין</a> לפני המרתון או במהלכו כדי לשפר ביצועים. לכך יש אכן תמיכה מדעית, אם כי יש הבדלים אישיים ברגישות ובתחושה. אצל רובם זה עובד, אבל אצל מעטים עלולות להיות תופעות לוואי. מחקרים הראו שדרושות כמויות קטנות יחסית של קפאין להשגת האפקט המיטבי (3 מ״ג לכל ק״ג משקל גוף; 200 מ״ג לאדם במשקל 70 ק״ג), וההמלצה הכללית היא לא לעבור 400 מ״ג קפאין ביום מכל המקורות. ג׳לים עם קפאין מכילים בדרך כלל 25 עד 50 מ״ג, ואספרסו 80 עד 100 מ״ג.</p>
+<h2>אחרי המרתון</h2>
+<p>יש אמנם הנחיות להתאוששות מהירה אחרי מרתון, אבל האם זה באמת כל כך משנה? רוב האנשים לא ירוצו מרתון נוסף למחרת, ולא יתחרו שוב במשך כמה שבועות. אז תיהנו מההישג ותפנקו את עצמכם — במידה!</p>
+<h2>רשימת תיוג שימושית</h2>
+<h3>שבועות לפני</h3>
+<ul>
+<li>למדו את המסלול ואת התזונה שתחולק בו, ובנו תוכנית.</li>
+<li>תרגול, תרגול, תרגול: התאמנו עם תוכנית התזונה למרוץ, עם המשקאות שיחולקו במסלול, ועם הג׳לים או כל דבר אחר שתשתמשו בו.</li>
+<li>תרגלו את ארוחת הבוקר ואת ארוחת הערב שלפני. גלו מה עובד הכי טוב בשבילכם.</li>
+<li>הזמינו מראש ארוחת ערב לערב שלפני במקום שאתם יודעים שהוא טוב. אל תחכו לרגע האחרון.</li>
+</ul>
+<h3>ימים לפני</h3>
+<ul>
+<li>קנו את התזונה למרוץ — אל תחכו לרגע האחרון.</li>
+<li>הגדילו את צריכת הפחמימות באמצעות מזון עשיר בפחמימות (לא פשוט לאכול יותר).</li>
+<li>הפחיתו סיבים תזונתיים יום-יומיים לפני האירוע אם אתם סובלים לעיתים קרובות מבעיות עיכול.</li>
+</ul>
+<h3>ארוחת הבוקר לפני המרוץ</h3>
+<ul>
+<li>אכלו את ארוחת הבוקר הקבועה שתרגלתם, 2.5-4 שעות לפני.</li>
+<li>הימנעו ממזון עתיר סיבים, שומן וחלבון.</li>
+<li>כוונו לפחות ל-100 גרם פחמימות.</li>
+<li>שתו מספיק נוזלים ובדקו שצבע השתן בהיר.</li>
+</ul>
+<h3>השעה שלפני</h3>
+<ul>
+<li>התחילו את ההזנה למרוץ 5-15 דקות לפני הזינוק (למשל ג׳ל עם כמה לגימות מים).</li>
+</ul>
+<h3>במהלך המרתון</h3>
+<ul>
+<li>היצמדו לתוכנית התזונה — אבל לא בכל מחיר.</li>
+<li>אל תנסו שום דבר חדש. היצמדו למה שתרגלתם.</li>
+<li>כוונו ל-30-60 גרם פחמימות בשעה.</li>
+<li>השתמשו במשקאות ספורט, ג׳לים, סוכריות גומי או חטיפים לפי העדפה אישית. אפשר לשלב ביניהם כדי להגיע ליעד הפחמימות.</li>
+<li>הימנעו מסיבים, שומן וחלבון במהלך הריצה.</li>
+<li>אל תשתו יותר מדי ואל תשתו מעט מדי. נסו להשתוות לאובדן הזיעה או מעט פחות. ירידה קלה במשקל בסוף (2% ממשקל הגוף) היא תקינה.</li>
+<li>אל תגזימו במלח או באלקטרוליטים.</li>
+</ul>
+        </article>
+      </div>
+    </div>
+
     <hr />
     <footer>
-      <br />
-      <h2>
-        ℹ️ Psst...
-      </h2>
-      In case you wish a great calculator that can estimate how fast you’d run
-      your next marathon based on your training regimen and your performance in
-      just one recent race <br /><br />Check this
-      <a
-        href="https://projects.fivethirtyeight.com/marathon-calculator/"
-        target="_blank"
-        >Five Thirty Eight Marathon Calculator</a
-      ><br />
-      <br />
-      <br />
-      🏃🏽‍♂️<a href="https://ido-green.appspot.com">Ido's Talks</a> 🏃🏼‍♀️
-      <small>Updated: Aug 2019</small>
+      <div data-lang-block="en">
+        <h2>ℹ️ Psst...</h2>
+        <p>
+          In case you wish a great calculator that can estimate how fast you’d
+          run your next marathon based on your training regimen and your
+          performance in just one recent race, check this
+          <a
+            href="https://projects.fivethirtyeight.com/marathon-calculator/"
+            target="_blank"
+            rel="noopener"
+            >Five Thirty Eight Marathon Calculator</a
+          >.
+        </p>
+      </div>
+      <div data-lang-block="he" hidden>
+        <h2>ℹ️ פססט...</h2>
+        <p>
+          מחפשים מחשבון מעולה שמעריך כמה מהר תרוצו את המרתון הבא לפי שגרת
+          האימונים שלכם והתוצאה במרוץ אחד אחרון? נסו את
+          <a
+            href="https://projects.fivethirtyeight.com/marathon-calculator/"
+            target="_blank"
+            rel="noopener"
+            >מחשבון המרתון של Five Thirty Eight</a
+          >.
+        </p>
+      </div>
+      <p>
+        🏃🏽‍♂️<a href="https://ido-green.appspot.com" data-i18n="footer.talks"
+          >Ido's Talks</a
+        >
+        🏃🏼‍♀️
+        <small data-i18n="footer.foodUpdated">Updated: Aug 2019</small>
+      </p>
     </footer>
 
+    <script type="module" src="js/main.js"></script>
   </body>
 </html>

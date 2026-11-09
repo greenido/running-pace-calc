@@ -1,5 +1,6 @@
 //
-// DOM wiring for the pace calculator. All the arithmetic lives in pace.js.
+// DOM wiring for the pace calculator. All the arithmetic lives in pace.js,
+// and every user-facing string lives in i18n.js.
 //
 // @Author: Ido
 // @date: April 2019
@@ -23,17 +24,36 @@ import {
   perKmToPerMile,
 } from './predict.js';
 
+import {
+  t,
+  getLang,
+  isRtl,
+  defaultUnit,
+  detectLang,
+  readStoredLang,
+  applyLanguage,
+  initLangSwitch,
+} from './i18n.js';
+
 const el = (id) => document.getElementById(id);
 
 let lastMode = null;
 
+// Once someone picks a unit (or a shared link carries one), switching
+// language must not override it. Until then Hebrew means kilometres.
+let unitChosen = false;
+let predictUnitChosen = false;
+
 function init() {
-  restoreFromUrl();
-  render();
+  const params = new URLSearchParams(location.search);
+  applyLanguage(startingLang(params));
+  restoreFromUrl(params);
+  refreshLanguage();
 
   const form = el('paceForm');
   form.addEventListener('input', onFormChange);
   form.addEventListener('change', onFormChange);
+  form.addEventListener('click', onStepClick);
   el('splitStrategy').addEventListener('change', render);
   el('shareBtn').addEventListener('click', share);
   el('printBtn').addEventListener('click', () => {
@@ -46,7 +66,41 @@ function init() {
 
   initTabs();
   initPredictor();
+  initLangSwitch(onLanguageChange);
   registerServiceWorker();
+}
+
+function startingLang(params) {
+  return detectLang({
+    urlLang: params.get('lang'),
+    storedLang: readStoredLang(),
+    browserLangs: navigator.languages ?? [navigator.language],
+  });
+}
+
+function onLanguageChange(lang) {
+  if (!unitChosen) setUnit(defaultUnit(lang));
+  if (!predictUnitChosen) el('predictUnit').value = defaultUnit(lang);
+  refreshLanguage();
+  renderPredictions();
+}
+
+// The strings that are built in JS rather than tagged in the markup.
+function refreshLanguage() {
+  for (const button of document.querySelectorAll('.step')) {
+    const key = Number(button.dataset.step) < 0 ? 'step.dec' : 'step.inc';
+    button.setAttribute('aria-label', t(key, { label: t(button.dataset.label) }));
+  }
+  for (const option of el('splitStrategy').options) {
+    option.textContent = strategyLabel(Number(option.value));
+  }
+  render();
+}
+
+function strategyLabel(negativeSplit) {
+  return negativeSplit > 0
+    ? t('splits.negative', { percent: (negativeSplit * 100).toFixed(0) })
+    : t('splits.even');
 }
 
 function onFormChange(event) {
@@ -54,7 +108,23 @@ function onFormChange(event) {
   if (event.target === el('customDistance')) {
     el('dist-custom').checked = true;
   }
+  if (event.target.name === 'unit') unitChosen = true;
   render();
+}
+
+//
+// The −/+ buttons nudge a slider by one and then behave exactly like a drag,
+// so render() stays the single place that reacts to input.
+//
+function onStepClick(event) {
+  const button = event.target.closest('.step');
+  if (!button) return;
+  const slider = el(button.dataset.target);
+  const next = Number(slider.value) + Number(button.dataset.step);
+  const clamped = Math.min(Number(slider.max), Math.max(Number(slider.min), next));
+  if (clamped === Number(slider.value)) return;
+  slider.value = clamped;
+  slider.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
 //
@@ -63,6 +133,10 @@ function onFormChange(event) {
 
 function getUnit() {
   return el('unit-km').checked ? 'km' : 'mi';
+}
+
+function setUnit(unit) {
+  el(unit === 'km' ? 'unit-km' : 'unit-mi').checked = true;
 }
 
 function getMode() {
@@ -89,13 +163,14 @@ function syncDistanceOptions() {
   for (const radio of document.getElementsByName('distance')) {
     if (!radio.dataset[unit]) continue;
     radio.value = radio.dataset[unit];
-    radio.nextElementSibling.textContent = radio.dataset[`${unit}Label`];
+    radio.parentElement.querySelector('.distance-label').textContent =
+      `${radio.dataset[unit]} ${unitLabel(unit)}`;
   }
   el('customUnitLabel').textContent = unitLabel(unit);
 }
 
 function unitLabel(unit) {
-  return unit === 'km' ? 'Km' : 'Mi';
+  return t(unit === 'km' ? 'unit.short.km' : 'unit.short.mi');
 }
 
 //
@@ -134,7 +209,7 @@ function render() {
   }
 
   el('TimeValue').textContent = formatClock(totalSeconds);
-  el('PaceValue').textContent = `${formatPace(paceSeconds)} Min/${unit}`;
+  showPace(paceSeconds, unit);
 
   el('timeCard').classList.toggle('is-result', mode === 'pace');
   el('paceCard').classList.toggle('is-result', mode === 'time');
@@ -143,23 +218,34 @@ function render() {
   writeUrl(mode, totalSeconds, paceSeconds);
 }
 
+// The unit is set smaller than the number so "10:59 Min/Mi" still fits half a
+// phone screen.
+function showPace(paceSeconds, unit) {
+  const number = document.createElement('span');
+  const suffix = document.createElement('span');
+  number.className = 'num';
+  suffix.className = 'unit';
+  number.textContent = formatPace(paceSeconds);
+  suffix.textContent = t('pace.unit', { unit });
+  el('PaceValue').replaceChildren(number, ' ', suffix);
+}
+
 function renderSplits(paceSeconds, distance, unit) {
   const negativeSplit = Number(el('splitStrategy').value) || 0;
   const rows = splits(paceSeconds, distance, { negativeSplit });
   const body = el('splitsBody');
 
-  el('splitsSummary').textContent = `Splits (${rows.length} × ${unit})`;
-  el('splitsCaption').textContent =
-    negativeSplit > 0
-      ? `Negative split — back half ${(negativeSplit * 100).toFixed(0)}% faster`
-      : 'Even pace';
+  el('splitsSummary').textContent = t('splits.summary', { count: rows.length, unit });
+  el('splitsCaption').textContent = strategyLabel(negativeSplit);
 
   body.replaceChildren(
     ...rows.map((row) => {
       const tr = document.createElement('tr');
       const mark = document.createElement('td');
       const time = document.createElement('td');
-      mark.textContent = row.partial ? `${row.mark} ${unit} (finish)` : `${row.mark} ${unit}`;
+      mark.textContent = row.partial
+        ? t('splits.finish', { mark: row.mark, unit })
+        : `${row.mark} ${unit}`;
       time.textContent = formatClock(row.cumulative);
       tr.append(mark, time);
       return tr;
@@ -194,12 +280,14 @@ function selectTab(activeId) {
 }
 
 // Left/right arrows move between tabs, which is what a tablist is expected
-// to do once it has role="tablist" on it.
+// to do once it has role="tablist" on it. In Hebrew the tabs run right to
+// left, so the arrows flip with them.
 function onTabKey(event) {
   if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
   event.preventDefault();
   const index = TABS.findIndex(({ tab }) => tab === event.currentTarget.id);
-  const step = event.key === 'ArrowRight' ? 1 : -1;
+  const forward = (event.key === 'ArrowRight') !== isRtl();
+  const step = forward ? 1 : -1;
   selectTab(TABS[(index + step + TABS.length) % TABS.length].tab);
 }
 
@@ -209,18 +297,31 @@ function onTabKey(event) {
 
 function initPredictor() {
   el('raceDistance').replaceChildren(
-    ...RACE_DISTANCES.map((race) => new Option(race.label, String(race.meters))),
+    ...RACE_DISTANCES.map((race) => new Option(raceLabel(race), String(race.meters))),
   );
   el('raceDistance').value = String(
     RACE_DISTANCES.find((race) => race.id === '10k').meters,
   );
 
   el('predictForm').addEventListener('input', renderPredictions);
-  el('predictForm').addEventListener('change', renderPredictions);
+  el('predictForm').addEventListener('change', (event) => {
+    if (event.target === el('predictUnit')) predictUnitChosen = true;
+    renderPredictions();
+  });
   renderPredictions();
 }
 
+function raceLabel(race) {
+  return t(`race.${race.id}`);
+}
+
 function renderPredictions() {
+  // The <option>s are built here, so they are relabelled here too.
+  for (const option of el('raceDistance').options) {
+    const race = RACE_DISTANCES.find((r) => String(r.meters) === option.value);
+    if (race) option.textContent = raceLabel(race);
+  }
+
   const meters = Number(el('raceDistance').value);
   const seconds = parseClock(el('raceTime').value);
   const unit = el('predictUnit').value;
@@ -237,7 +338,7 @@ function renderPredictions() {
 
   const perUnit = (secondsPerKm) =>
     unit === 'mi' ? perKmToPerMile(secondsPerKm) : secondsPerKm;
-  const unitName = unit === 'mi' ? 'Mi' : 'Km';
+  const perUnitName = t('pace.per', { unit: unitLabel(unit) });
   const unitMeters = unit === 'mi' ? METERS_PER_MILE : 1000;
 
   el('predictBody').replaceChildren(
@@ -245,9 +346,9 @@ function renderPredictions() {
       const tr = document.createElement('tr');
       if (race.isSource) tr.className = 'is-source';
       tr.append(
-        cell(race.isSource ? `${race.label} (your race)` : race.label),
+        cell(race.isSource ? t('predict.yourRace', { label: raceLabel(race) }) : raceLabel(race)),
         cell(formatClock(race.seconds)),
-        cell(`${formatPace(race.seconds / (race.meters / unitMeters))} /${unitName}`),
+        cell(`${formatPace(race.seconds / (race.meters / unitMeters))} ${perUnitName}`),
       );
       return tr;
     }),
@@ -259,7 +360,10 @@ function renderPredictions() {
   el('trainingBody').replaceChildren(
     ...trainingPaces(vdotValue).map((zone) => {
       const tr = document.createElement('tr');
-      tr.append(cell(zone.label), cell(`${formatPace(perUnit(zone.secondsPerKm))} /${unitName}`));
+      tr.append(
+        cell(t(`zone.${zone.id}`)),
+        cell(`${formatPace(perUnit(zone.secondsPerKm))} ${perUnitName}`),
+      );
       return tr;
     }),
   );
@@ -329,15 +433,21 @@ function writeUrl(mode, totalSeconds, paceSeconds) {
     mode,
     d: String(getDistance() ?? ''),
     t: mode === 'pace' ? formatPace(paceSeconds) : formatClock(totalSeconds),
+    lang: getLang(),
   });
   history.replaceState(null, '', `?${params}`);
 }
 
-function restoreFromUrl() {
-  const params = new URLSearchParams(location.search);
-  if (![...params.keys()].length) return;
+function restoreFromUrl(params) {
+  const urlUnit = params.get('u');
+  if (urlUnit === 'km' || urlUnit === 'mi') {
+    setUnit(urlUnit);
+    unitChosen = true;
+  } else {
+    setUnit(defaultUnit());
+  }
+  el('predictUnit').value = defaultUnit();
 
-  if (params.get('u') === 'km') el('unit-km').checked = true;
   if (params.get('mode') === 'pace') el('mode-pace').checked = true;
   syncDistanceOptions();
 
@@ -365,12 +475,12 @@ async function share() {
   const button = el('shareBtn');
   try {
     await navigator.clipboard.writeText(location.href);
-    button.textContent = 'Link copied ✓';
+    button.textContent = t('btn.shared');
   } catch {
-    button.textContent = 'Copy from the address bar';
+    button.textContent = t('btn.shareFailed');
   }
   setTimeout(() => {
-    button.textContent = 'Copy link';
+    button.textContent = t('btn.share');
   }, 2000);
 }
 
@@ -378,8 +488,11 @@ async function share() {
 // Entry point lives at the bottom so every const above it is initialised by
 // the time init() runs — a call at the top hits the temporal dead zone.
 //
-// The guard is for marathon-food.html, which has no calculator markup.
+// marathon-food.html has no calculator markup, only the language switch.
 //
 if (el('paceForm')) {
   init();
+} else {
+  applyLanguage(startingLang(new URLSearchParams(location.search)));
+  initLangSwitch();
 }
